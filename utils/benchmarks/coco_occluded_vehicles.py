@@ -21,7 +21,7 @@ from utils.load_benchmark_scores import load_benchmark_scores
 np.random.seed(42)
 
 BENCHMARK = 'COCO_Occluded_Vehicles'
-BENCHMARK_BASE = f'/home/tonglab/Datasets/{BENCHMARK}'
+BENCHMARK_BASE = f'/home/david/Datasets/{BENCHMARK}'
 CLASSES = {
     'aeroplane': [404, 895],
     'bicycle': [671, 444],
@@ -69,12 +69,34 @@ def crop_images():
 
 def accuracy(output, target):
 
-    """Computes the precision@k for the specified values of k"""
+    """Computes top 1 accuracy including all 1000 classes"""
     _, pred = output.topk(1, 1, True, True)
     res = []
     pred = pred.detach().cpu()
     for trg, prd in zip(target, pred):
         res.append(torch.tensor(int(prd in trg)).float())
+    return torch.tensor(res)
+
+
+def accuracy_afc(output, target):
+    """Computes 6-AFC accuracy (max value)"""
+    res = []
+    for trg, prd in zip(target, output.detach().cpu()):
+        targ = [i for i, (key, value) in enumerate(CLASSES.items()) if trg == value][0]
+        preds = torch.tensor([torch.tensor([prd[v] for v in value]).max() for key, value in CLASSES.items()])
+        pred = torch.argmax(preds)
+        res.append(torch.tensor(pred == targ).float())
+    return torch.tensor(res)
+
+
+def accuracy_afc_sum(output, target):
+    """Computes 6-AFC accuracy (sum of values)"""
+    res = []
+    for trg, prd in zip(target, output.detach().cpu()):
+        targ = [i for i, (key, value) in enumerate(CLASSES.items()) if trg == value][0]
+        preds = torch.tensor([torch.tensor([prd[v] for v in value]).sum() for key, value in CLASSES.items()])
+        pred = torch.argmax(preds)
+        res.append(torch.tensor(pred == targ).float())
     return torch.tensor(res)
 
 
@@ -85,7 +107,7 @@ def score_model(model_dir, architecture, batch_size, m=0, total_models=0,
     results, out_path = load_benchmark_scores(
         model_dir, BENCHMARK, overwrite)
 
-    if len(results[results.benchmark == BENCHMARK]) == 2:
+    if not results.empty and len(results[results.benchmark == BENCHMARK]) == 4:
         return False
 
     print(f'{now()} | Measuring performance for {BENCHMARK}, '
@@ -124,23 +146,37 @@ def score_model(model_dir, architecture, batch_size, m=0, total_models=0,
             # calculate accuracy
             if batch == 0:
                 performance = {metric: {k: AverageMeter() for k in outputs}
-                               for metric in ['accuracy', 'probability']}
+                               for metric in ['accuracy', 'probability', 'accuracy_afc', 'accuracy_afc_sum']}
             for cycle, output in outputs.items():
                 acc = accuracy(output, targets)#.detach().cpu().item()
                 for i in acc:
                     performance['accuracy'][cycle].update(i.item())
+
+                acc_afc = accuracy_afc(output, targets)  # .detach().cpu().item()
+                for i in acc_afc:
+                    performance['accuracy_afc'][cycle].update(i.item())
+
+                acc_afc_sum = accuracy_afc_sum(output, targets)  # .detach().cpu().item()
+                for i in acc_afc_sum:
+                    performance['accuracy_afc_sum'][cycle].update(i.item())
+
                 output_norm = F.softmax(output, 1)
                 prob = torch.tensor([output_norm[i, j].detach().cpu().mean()
                                      for i, j in enumerate(targets)])
                 for i in prob:
                     performance['probability'][cycle].update(i.item())
 
+
             # print last and mean accuracy of final cycle
             tepoch.set_postfix_str(
                 f'acc: {acc.mean():.4f}('
                 f'{performance["accuracy"][cycle].avg_epoch:.4f}) | '
                 f'prob: {prob.mean():.4f}('
-                f'{performance["probability"][cycle].avg_epoch:.4f})')
+                f'{performance["probability"][cycle].avg_epoch:.4f}) | '
+                f'acc_afc: {acc_afc.mean():.4f}('
+                f'{performance["accuracy_afc"][cycle].avg_epoch:.4f}) | '
+                f'acc_afc_sum: {acc_afc_sum.mean():.4f}('
+                f'{performance["accuracy_afc_sum"][cycle].avg_epoch:.4f})')
 
     # save results
     for metric, cycles in performance.items():

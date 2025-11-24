@@ -22,30 +22,30 @@ properties = {
     'all': {'readout_layer': 'output'},
     'level1': {
         'no occlusion': {'color': 'w', 'edgecolor': 'k', 'xpos': 0},
+        'artificial 2\nweak occlusion': {
+            'color': cols_light['red'], 'xpos': 12},
+        'artificial 2\nmoderate occlusion': {
+            'color': cols['red'], 'xpos': 13},
+        'artificial 2\nstrong occlusion': {
+            'color': cols_dark['red'], 'xpos': 14},
         'artificial 1\nweak occlusion': {
-            'color': cols_light['red'], 'xpos': 1.5},
+            'color': cols_light['blue'], 'xpos': 8.5},
         'artificial 1\nmoderate occlusion': {
-            'color': cols['red'], 'xpos': 2.5},
+            'color': cols['blue'], 'xpos': 9.5},
         'artificial 1\nstrong occlusion': {
-            'color': cols_dark['red'], 'xpos': 3.5},
-        'artificial 3\nweak occlusion': {
-            'color': cols_light['blue'], 'xpos': 5},
-        'artificial 3\nmoderate occlusion': {
-            'color': cols['blue'], 'xpos': 6},
-        'artificial 3\nstrong occlusion': {
-            'color': cols_dark['blue'], 'xpos': 7},
+            'color': cols_dark['blue'], 'xpos': 10.5},
         'natural silhouette\nweak occlusion': {
-            'color': cols_light['brown'], 'xpos': 8.5},
+            'color': cols_light['brown'], 'xpos': 5},
         'natural silhouette\nmoderate occlusion': {
-            'color': cols['brown'], 'xpos': 9.5},
+            'color': cols['brown'], 'xpos': 6},
         'natural silhouette\nstrong occlusion': {
-            'color': cols_dark['brown'], 'xpos': 10.5},
+            'color': cols_dark['brown'], 'xpos': 7},
         'natural\nweak occlusion': {
-            'color': cols_light['green'], 'xpos': 12},
+            'color': cols_light['green'], 'xpos': 1.5},
         'natural\nmoderate occlusion': {
-            'color': cols['green'], 'xpos': 13},
+            'color': cols['green'], 'xpos': 2.5},
         'natural\nstrong occlusion': {
-            'color': cols_dark['green'], 'xpos': 14},
+            'color': cols_dark['green'], 'xpos': 3.5},
     },
     'level2': {
         'ResNet101': {'architecture': 'resnet101', 'linestyle': 'solid'},
@@ -62,7 +62,7 @@ models = {
             'path': 'efficientnet_b1/xform-cont-weak-resize',
         },
     },
-    'artificial 1\nweak occlusion': {
+    'artificial 2\nweak occlusion': {
         'ResNet101': {
             'path': 'resnet101/occ-art3-weak_xform-cont-weak-resize',
         },
@@ -70,7 +70,7 @@ models = {
             'path': 'efficientnet_b1/occ-art3-weak_xform-cont-weak-resize',
         },
     },
-    'artificial 1\nmoderate occlusion': {
+    'artificial 2\nmoderate occlusion': {
         'ResNet101': {
             'path': 'resnet101/occ-art3_xform-cont-weak-resize',
         },
@@ -78,7 +78,7 @@ models = {
             'path': 'efficientnet_b1/occ-art3_xform-cont-weak-resize',
         },
     },
-    'artificial 1\nstrong occlusion': {
+    'artificial 2\nstrong occlusion': {
         'ResNet101': {
             'path': 'resnet101/occ-art3-strong_xform-cont-weak-resize',
         },
@@ -86,7 +86,7 @@ models = {
             'path': 'efficientnet_b1/occ-art3-strong_xform-cont-weak-resize',
         },
     },
-    'artificial 3\nweak occlusion': {
+    'artificial 1\nweak occlusion': {
         'ResNet101': {
             'path': 'resnet101/occ-art-weak_xform-cont-weak-resize',
         },
@@ -94,7 +94,7 @@ models = {
             'path': 'efficientnet_b1/occ-art-weak_xform-cont-weak-resize',
         },
     },
-    'artificial 3\nmoderate occlusion': {
+    'artificial 1\nmoderate occlusion': {
         'ResNet101': {
             'path': 'resnet101/occ-art_xform-cont-weak-resize',
         },
@@ -102,7 +102,7 @@ models = {
             'path': 'efficientnet_b1/occ-art_xform-cont-weak-resize',
         },
     },
-    'artificial 3\nstrong occlusion': {
+    'artificial 1\nstrong occlusion': {
         'ResNet101': {
             'path': 'resnet101/occ-art-strong_xform-cont-weak-resize',
         },

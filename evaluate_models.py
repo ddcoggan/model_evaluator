@@ -10,7 +10,6 @@ import datetime
 from joblib import Parallel, delayed
 from utils.model_contrasts import all_models
 
-
 # hardware
 num_procs = 8
 gpu = 0
@@ -29,20 +28,20 @@ benchmarks = [
     #'plot_filters',
     #'collate_training_inputs',
     #'coco_instaorder_cls',
-    'model_vs_human',
-    'cocoa_cls',
-    'coco_occluded_vehicles',
+    #'model_vs_human',
+    #'cocoa_cls',
+    #'coco_occluded_vehicles',
     'pascal3d_occluded_objects',
-    'texture_versus_shape_bias',
-    'imagenet',
-    'imagenet_noise',
-    'imagenet_C',
-    'imagenet_occluded',
-    'imagenet_cutmix',
-    'occlusion_behavioral_exp1',
-    'occlusion_behavioral_exp2',
-    'occlusion_fmri',
-    'brainscore',
+    #'texture_versus_shape_bias',
+    #'imagenet',
+    #'imagenet_noise',
+    #'imagenet_C',
+    #'imagenet_occluded',
+    #'imagenet_cutmix',
+    #'occlusion_behavioral_exp1',
+    #'occlusion_behavioral_exp2',
+    #'occlusion_fmri',
+    #'brainscore',
 ]
 
 # start running benchmarks
@@ -66,7 +65,7 @@ if 'make_legends' in benchmarks:
     make_legends(overwrite=False)
 
 if 'plot_filters' in benchmarks:
-    print('Plot convolutional filters...')
+    print('Plotting convolutional filters...')
     from utils.plot_filters import plot_filters
     plot_filters(models, overwrite=False)
 
@@ -86,7 +85,7 @@ if 'coco_instaorder_cls' in benchmarks:
             architecture=info['architecture'],
             batch_size=info['batch_size'],
             m=m,
-            total_models=len(models),
+            total_models=len(supervised_models),
             overwrite=False,
             num_procs=num_procs)
 
@@ -98,8 +97,9 @@ if 'model_vs_human' in benchmarks:
             model_dir=model_dir,
             architecture=info['architecture'],
             batch_size=64, #info['batch_size'],
+            image_size=info['image_size'],
             m=m,
-            total_models=len(models),
+            total_models=len(supervised_models),
             overwrite=False,
             num_procs=num_procs)
 
@@ -114,7 +114,7 @@ if 'cocoa_cls' in benchmarks:
             architecture=info['architecture'],
             batch_size=64, #info['batch_size'],
             m=m,
-            total_models=len(models),
+            total_models=len(supervised_models),
             overwrite=False,
             num_procs=num_procs)
 
@@ -141,7 +141,7 @@ if 'pascal3d_occluded_objects' in benchmarks:
             batch_size=64,#info['batch_size'],
             m=m,
             total_models=len(supervised_models),
-            overwrite=False,
+            overwrite=True,
             num_procs=num_procs)
 
 if 'texture_versus_shape_bias' in benchmarks:
@@ -194,7 +194,7 @@ if 'imagenet_C' in benchmarks:
         score_model(
             model_dir=model_dir,
             architecture=architecture,
-            batch_size=64,#info['batch_size'],
+            batch_size=info['batch_size'],
             m=m,
             total_models=len(supervised_models),
             overwrite=False,
@@ -208,7 +208,7 @@ if 'imagenet_occluded' in benchmarks:
         score_model(
             model_dir=model_dir,
             architecture=info['architecture'],
-            batch_size=64, #info['batch_size'],
+            batch_size=info['batch_size'],
             m=m,
             total_models=len(supervised_models),
             overwrite=False,
@@ -221,7 +221,7 @@ if 'imagenet_cutmix' in benchmarks:
         score_model(
             model_dir=model_dir,
             architecture=info['architecture'],
-            batch_size=64,  # info['batch_size'],
+            batch_size=info['batch_size'],
             m=m,
             total_models=len(supervised_models),
             overwrite=False,
@@ -244,7 +244,7 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
                 m=m,
                 total_models=len(models),
                 layer=layer,
-                overwrite=True,
+                overwrite=False,
                 num_procs=num_procs)
 
             # ensure transfer learning used in both experiments is performed
@@ -268,7 +268,7 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
                     m=m,
                     total_models=len(models),
                     layers=[layer],
-                    overwrite=True,
+                    overwrite=False,
                     num_procs=num_procs)
                 kwargs['overwrite'] = get_responses(**kwargs)
                 kwargs_performance = {**kwargs, **dict(remake_plots=False)}
@@ -283,7 +283,7 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
             overwrite_analyses = Parallel(n_jobs=num_procs)(
                 delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
         from utils.behavioral_compare_models_exp1 import compare_models
-        compare_models(overwrite=False)
+        compare_models(overwrite=True)
 
     # Experiment 2
     if 'occlusion_behavioral_exp2' in benchmarks:
@@ -302,7 +302,7 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
                     m=m,
                     total_models=len(models),
                     layers=[layer],
-                    overwrite=True,
+                    overwrite=False,
                     num_procs=num_procs)
                 kwargs['overwrite'] = get_responses(**kwargs)
                 kwargs_performance = {**kwargs, **dict(remake_plots=False)}
@@ -330,39 +330,39 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
         plot_pixel_attribution(model_dir, m, len(model_dirs), overwrite=False)
     compare_models_pixel(overwrite=False)
     
-    print('fMRI benchmark...')
-    from utils.fMRI_benchmark import (get_model_responses, RSA_fMRI,
-                                      get_prednet_responses,
-                                      generate_reconstructions)
-    recompare_models = False
-    for m, model_dir in enumerate(model_dirs):
-        overwrite = False
-        if 'prednet' in model_dir:
-            overwrite = get_prednet_responses(model_dir, overwrite=overwrite)
-            generate_reconstructions(model_dir, overwrite)
-        else:
-            overwrite = get_model_responses(
-                model_dir, m, len(model_dirs), overwrite=overwrite)
-        #if 'pix2pix' in model_dir:
-        #    generate_reconstructions(model_dir, overwrite)
-        overwrite = RSA_fMRI(
+print('fMRI benchmark...')
+from utils.fMRI_benchmark import (get_model_responses, RSA_fMRI,
+                                  get_prednet_responses,
+                                  generate_reconstructions)
+recompare_models = False
+for m, model_dir in enumerate(model_dirs):
+    overwrite = False
+    if 'prednet' in model_dir:
+        overwrite = get_prednet_responses(model_dir, overwrite=overwrite)
+        generate_reconstructions(model_dir, overwrite)
+    else:
+        overwrite = get_model_responses(
             model_dir, m, len(model_dirs), overwrite=overwrite)
-        if overwrite:
-            recompare_models = True
-    from utils.fMRI_compare_models import compare_models
-    compare_models(overwrite=recompare_models)
-    
-    Brainscore is in the middle of an upgrade, nothing works right now
-    print('BrainScore benchmark...')
-    recompare_models = True
-    for m, model_dir in enumerate(model_dirs):
-        overwrite = False
-        overwrite = measure_scores(
-            model_dir, m, len(model_dirs), overwrite=overwrite)
-        if overwrite:
-            recompare_models = True
-    compare_models_brainscore(overwrite=recompare_models)
-    """
+    #if 'pix2pix' in model_dir:
+    #    generate_reconstructions(model_dir, overwrite)
+    overwrite = RSA_fMRI(
+        model_dir, m, len(model_dirs), overwrite=overwrite)
+    if overwrite:
+        recompare_models = True
+from utils.fMRI_compare_models import compare_models
+compare_models(overwrite=recompare_models)
+
+Brainscore is in the middle of an upgrade, nothing works right now
+print('BrainScore benchmark...')
+recompare_models = True
+for m, model_dir in enumerate(model_dirs):
+    overwrite = False
+    overwrite = measure_scores(
+        model_dir, m, len(model_dirs), overwrite=overwrite)
+    if overwrite:
+        recompare_models = True
+compare_models_brainscore(overwrite=recompare_models)
+"""
 
 finish = time.time()
 print(f'Done. Total time: {str(datetime.timedelta(seconds=finish-start))}')
