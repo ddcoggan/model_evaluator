@@ -791,6 +791,19 @@ def measure_human_likeness(trials_model, trials_human):
                 metric_sim=['accuracy_distance'],
                 value=[value]))])
 
+            # condition-wise accuracy correlation (all 91 conditions
+            # including unoccluded)
+            if 'visibility' in groupby:
+                value = np.corrcoef(both.human_performance,
+                                    both.model_performance)[0, 1]
+                human_likeness = pd.concat([human_likeness, pd.DataFrame(dict(
+                    subject=[subject],
+                    level=['condition-wise'],
+                    within=['_x_'.join(['subject'] + groupby)],
+                    between=['_x_'.join(between)],
+                    metric_sim=['cond_pearson_r_unocc'],
+                    value=[value]))])
+
             # all other metrics require separating occluded and unoccluded
             subject_trials = trials_subject_occ[groupby + ['human_performance']]
             model_trials = trials_rem_grp_occ[groupby + ['model_performance']]
@@ -800,7 +813,7 @@ def measure_human_likeness(trials_model, trials_human):
                 .groupby(groupby)
                 .agg('mean', numeric_only=True))
 
-            # condition-wise accuracy correlation
+            # condition-wise accuracy correlation (occluded conditions only)
             value = np.corrcoef(both.human_performance,
                                both.model_performance)[0,1]
             human_likeness = pd.concat([human_likeness, pd.DataFrame(dict(
