@@ -48,13 +48,13 @@ HUMAN_CONFIG = {'humans': {
 # control which model sets are processed
 model_contrasts = dict(
 
-    #public_models=public_models,
+    public_models=public_models,
 
     #exp1_mnscrpt_diet=exp1_mnscrpt_diet,
     #exp1_mnscrpt_occ_type=exp1_mnscrpt_occ_type,
     #exp1_mnscrpt_occ_type_vit=exp1_mnscrpt_occ_type_vit,
     #exp1_mnscrpt_occ_type_pooled=exp1_mnscrpt_occ_type_pooled,
-    exp1_mnscrpt_occ_type_vit_pooled=exp1_mnscrpt_occ_type_vit_pooled,
+    #exp1_mnscrpt_occ_type_vit_pooled=exp1_mnscrpt_occ_type_vit_pooled,
     #exp1_mnscrpt_occ_strength=exp1_mnscrpt_occ_strength,
     #exp1_mnscrpt_occ_strength_pooled=exp1_mnscrpt_occ_strength_pooled,
     #exp1_mnscrpt_occ_strength_pooled_type_strn=\

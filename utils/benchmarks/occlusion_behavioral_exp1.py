@@ -42,7 +42,7 @@ from utils.get_activations import get_activations
 from utils.math_functions import sigmoid
 from utils.plot_utils import custom_defaults
 plt.rcParams.update(custom_defaults)
-sys.path.append(op.expanduser('~/david/projects/p022_occlusion'))
+sys.path.append(op.expanduser('~/data/projects/p022_occlusion'))
 from in_vivo.behavioral.exp1.analysis import CFG as EXP1
 from in_vivo.behavioral.exp1.analysis import (
     condwise_robustness_plot_array)
@@ -356,7 +356,7 @@ def get_responses(model_dir, architecture, layers, batch_size, m=0,
         .reset_index(drop=True)
 
     # print out accuracy for each layer and cycle
-    new_trials.groupby(['layer', 'cycle']).apply(
+    new_trials.groupby(['layer', 'cycle'], observed=False).apply(
         lambda df: print(
             f'{now()} | {df.name} accuracy: {df.accuracy.mean():.4}'))
 
@@ -541,7 +541,7 @@ def estimate_model_RTs(trials_long):
     metric = trials_long.name[-1]
     trials = (trials_long[trials_long.visibility == 1])
     trials['visibility'] = (
-        trials_long.groupby('stimulus_id').apply(_estimate_RT, metric)).values
+        trials_long.groupby('stimulus_id', observed=False).apply(_estimate_RT, metric)).values
 
     return trials
 
@@ -573,7 +573,7 @@ def fit_visibility_curves(trials):
         yvals = (trials[
                      (trials['occluder_class'] == occluder_class) &
                      (trials['occluder_color'] == occluder_color)]
-                 .groupby('visibility').mean(
+                 .groupby('visibility', observed=False).mean(
             numeric_only=True).value.to_list())
         yval_mean = np.mean(yvals)
 
@@ -602,7 +602,7 @@ def fit_visibility_curves(trials):
         if dataset == 'artificial':
             trials = trials[trials.occluder_class !=
                             'naturalUntexturedCropped2']
-        yvals = (trials.groupby('visibility').mean(
+        yvals = (trials.groupby('visibility', observed=False).mean(
             numeric_only=True).value.to_list())
         yval_mean = np.mean(yvals)
         if metric != 'entropy':
@@ -662,11 +662,11 @@ def measure_human_likeness(trials_model, trials_human):
             df['c_obs'] = [_c_obs(trials)]
         if 'c_err' in metrics:
             if groupby:
-                df['c_err'] = trials.groupby(groupby).apply(_c_err)
+                df['c_err'] = trials.groupby(groupby, observed=False).apply(_c_err)
             else:
                 df['c_err'] = [_c_err(trials)]
         if 'c_err_weighted' in metrics:
-            temp = trials.groupby(groupby).apply(_c_err, weighted=True)
+            temp = trials.groupby(groupby, observed=False).apply(_c_err, weighted=True)
             c_errs = [i[0] for i in temp]
             weights = [i[1] for i in temp]
             weights_sqrt = np.sqrt(weights)
@@ -678,7 +678,7 @@ def measure_human_likeness(trials_model, trials_human):
         df = df.reset_index().melt(
             id_vars=groupby, value_vars=metrics, var_name='metric_sim')
         if groupby:  # average across conditions
-            df = df.groupby('metric_sim').agg({'value': 'mean'}).reset_index()
+            df = df.groupby('metric_sim', observed=False).agg({'value': 'mean'}).reset_index()
         df['level'] = 'trial-wise'
         df['within'] = '_x_'.join(['subject'] + groupby)
         df['between'] = 'trial'
@@ -688,11 +688,13 @@ def measure_human_likeness(trials_model, trials_human):
         acc_hum = trials.human_performance.mean()
         acc_mod = trials.model_performance.mean()
         max_dist = max(acc_hum, 1 - acc_hum)
+        if max_dist == 0:
+            return np.nan
         acc_dist = np.abs(acc_hum - acc_mod) / max_dist
         return acc_dist
 
     def _curve_correlation(trials, unocc_subject, unocc_model, norm_curve=None):
-        trials_agg = trials.groupby('visibility').mean(numeric_only=True)
+        trials_agg = trials.groupby('visibility', observed=False).mean(numeric_only=True)
         curve_subject = trials_agg.human_performance.to_list() + [unocc_subject]
         curve_model = trials_agg.model_performance.to_list() + [unocc_model]
         if norm_curve is not None:
@@ -722,7 +724,7 @@ def measure_human_likeness(trials_model, trials_human):
         return pd.DataFrame()
 
     # all trials, all metrics (except c_err_weighted to keep subject parity)
-    df = trials.groupby('subject').apply(_measure_consistencies,
+    df = trials.groupby('subject', observed=False).apply(_measure_consistencies,
         metrics=['c_obs', 'c_err', 'c_inacc']).reset_index('subject')
     human_likeness = pd.concat([human_likeness, df])
 
@@ -731,7 +733,7 @@ def measure_human_likeness(trials_model, trials_human):
     for var in ['visibility', 'occluder_class', 'occluder_color']:
         groupby.append(var)
         df = (trials
-            .groupby('subject')
+            .groupby('subject', observed=False)
             .apply(_measure_consistencies, groupby=groupby,
                    metrics=['c_err', 'c_err_weighted'])
             .reset_index('subject'))
@@ -744,7 +746,7 @@ def measure_human_likeness(trials_model, trials_human):
         # all and occluded-only trials, unocc performance for subject
         trials_subject = trials[trials.subject == subject]
         trials_subject_occ = (trials_subject[trials_subject.visibility < 1]
-            .groupby(max_groupby)
+            .groupby(max_groupby, observed=False)
             .agg('mean', numeric_only=True)
             .reset_index())
         unocc_subject = (trials_subject[trials_subject.visibility == 1]
@@ -753,7 +755,7 @@ def measure_human_likeness(trials_model, trials_human):
         # all and occluded-only trials, unocc performance for rem grp and model
         trials_rem_grp = trials[trials.subject != subject]
         trials_rem_grp_occ = (trials_rem_grp[trials_rem_grp.visibility < 1]
-            .groupby(max_groupby)
+            .groupby(max_groupby, observed=False)
             .agg('mean', numeric_only=True)
             .reset_index())
         unocc_rem_grp = (trials_rem_grp[trials_rem_grp.visibility == 1]
@@ -763,7 +765,7 @@ def measure_human_likeness(trials_model, trials_human):
 
         # mean visibility-accuracy performance curve for remaining groupby
         mean_curve_rem_grp = (trials_rem_grp_occ
-            .groupby('visibility')
+            .groupby('visibility', observed=False)
             .agg('mean', numeric_only=True)
             .sort_values(by='visibility')
             .human_performance.to_list()
@@ -780,7 +782,7 @@ def measure_human_likeness(trials_model, trials_human):
             model_trials = trials_rem_grp[groupby + ['model_performance']]
             both = subject_trials.merge(model_trials, on=groupby)
             value = (both
-                  .groupby(groupby)
+                  .groupby(groupby, observed=False)
                   .apply(_accuracy_distance)
                   .agg('mean', numeric_only=True))
             human_likeness = pd.concat([human_likeness, pd.DataFrame(dict(
@@ -810,7 +812,7 @@ def measure_human_likeness(trials_model, trials_human):
             both = (subject_trials
                 .merge(model_trials, on=groupby)
                 .dropna()
-                .groupby(groupby)
+                .groupby(groupby, observed=False)
                 .agg('mean', numeric_only=True))
 
             # condition-wise accuracy correlation (occluded conditions only)
@@ -838,7 +840,7 @@ def measure_human_likeness(trials_model, trials_human):
 
                 # correlation across visibility-accuracy curve
                 value = (both
-                    .groupby(groupby)
+                    .groupby(groupby, observed=False)
                     .apply(_curve_correlation, unocc_subject, unocc_model)
                     .agg('mean', numeric_only=True))
                 human_likeness = pd.concat([human_likeness, pd.DataFrame(dict(
@@ -851,7 +853,7 @@ def measure_human_likeness(trials_model, trials_human):
 
                 # correlation across normed curve (subtract mean curve x rem grp)
                 value = (both
-                    .groupby(groupby)
+                    .groupby(groupby, observed=False)
                     .apply(_curve_correlation, unocc_subject,
                            unocc_model, mean_curve_rem_grp)
                     .agg('mean', numeric_only=True))
@@ -891,7 +893,8 @@ def existing_results(path, layers, overwrite):
     if op.isfile(path):
         df = pd.read_parquet(path, columns=['layer'])
         if overwrite:
-            return df[~df.layer.isin(layers)]
+            return pd.DataFrame()
+            #return df[~df.layer.isin(layers)]
         elif all(layer in df.layer.unique() for layer in layers):
             return True
         return df
@@ -903,7 +906,6 @@ def analyse_performance(model_dir, m=0, total_models=0,
 
     results_dir = op.join(MODEL_BASE, model_dir, RES_DIR, 'exp1')
     mod_str = f'model {m + 1}/{total_models} at {model_dir}'
-    recompare_models = False
     groupby = ['layer', 'cycle', 'metric']
 
     # fit performance curves
@@ -914,12 +916,12 @@ def analyse_performance(model_dir, m=0, total_models=0,
         trials_model = reshape_metrics(
             load_trials(model_dir=model_dir), shape='long')
         curves = (trials_model
-                  .groupby(groupby)
+                  .groupby(groupby, observed=False)
                   .apply(fit_visibility_curves)
                   .reset_index(groupby))
         curves = pd.concat([existing_curves, curves]).reset_index(drop=True)
         curves.to_parquet(curves_path, index=False)
-        recompare_models, remake_plots = True, True
+        remake_plots = True
 
     # measure human likeness
     likeness_path = f'{results_dir}/human_likeness.parquet'
@@ -932,7 +934,7 @@ def analyse_performance(model_dir, m=0, total_models=0,
 
         # full dataset
         likeness = (trials_model
-            .groupby(groupby)
+            .groupby(groupby, observed=False)
             .apply(measure_human_likeness, trials_human)
             .reset_index(level=groupby[:-1]))
         likeness['dataset'] = 'all'
@@ -943,7 +945,7 @@ def analyse_performance(model_dir, m=0, total_models=0,
         trials_human_artificial = trials_human[
             trials_human.occluder_class != 'naturalUntexturedCropped2']
         likeness_a = (trials_model_artificial
-          .groupby(groupby)
+          .groupby(groupby, observed=False)
           .apply(measure_human_likeness, trials_human_artificial)
           .reset_index(level=groupby[:-1]))
         likeness_a['dataset'] = 'artificial'
@@ -951,13 +953,11 @@ def analyse_performance(model_dir, m=0, total_models=0,
 
         likeness = pd.concat([existing_likeness, likeness]).reset_index(drop=True)
         likeness.to_parquet(likeness_path, index=False)
-        recompare_models, remake_plots = True, True
+        remake_plots = True
 
     # plot model performance
     if remake_plots or not op.isdir(op.join(results_dir, 'plots')):
         plot_performance(model_dir)
-
-    return recompare_models
 
 
 def plot_performance(model_dir):
@@ -1014,11 +1014,11 @@ def plot_performance(model_dir):
         rob_m = robustness_m.rename(columns={'value': f'model_value'})
         rob_h = (rob_h[
                      rob_h.occluder_class.isin(OCC_CLASSES)]
-                 .groupby(['occluder_class', 'occluder_color'])
+                 .groupby(['occluder_class', 'occluder_color'], observed=False)
                  .agg({'human_value': 'mean'}))
         rob_m = (rob_m[
                      rob_m.occluder_class.isin(OCC_CLASSES)]
-                 .groupby(['occluder_class', 'occluder_color'])
+                 .groupby(['occluder_class', 'occluder_color'], observed=False)
                  .agg({'model_value': 'mean'}))
         plot_data = pd.merge(rob_h, rob_m,
                              on=['occluder_class', 'occluder_color'])
@@ -1048,16 +1048,16 @@ def plot_performance(model_dir):
     # model
     groupby = ['layer', 'cycle', 'occluder_class', 'occluder_color',
                'metric', 'visibility']
-    robustness_m = (reshape_metrics(trials_m, 'long').groupby(groupby)
+    robustness_m = (reshape_metrics(trials_m, 'long').groupby(groupby, observed=False)
                     .agg({'value': 'mean'}).dropna().reset_index())
 
     # human
     groupby = ['occluder_class', 'occluder_color', 'visibility']
-    robustness_h = (trials_h.groupby(groupby)
+    robustness_h = (trials_h.groupby(groupby, observed=False)
                     .agg('mean', numeric_only=True).reset_index())
 
     # condition-wise scatter_plots, model vs human
-    for rob_m in robustness_m.groupby(['layer', 'cycle', 'metric']):
+    for rob_m in robustness_m.groupby(['layer', 'cycle', 'metric'], observed=False):
         _make_scatterplots(rob_m[1], robustness_h, rob_m[0])
 
     # performance curves, model only
@@ -1072,7 +1072,7 @@ def plot_performance(model_dir):
         ordered=True)
     trials_m = reshape_metrics(trials_m, 'long')
     groupby = ['layer', 'cycle', 'metric']
-    for rob, cur in zip(trials_m.groupby(groupby), curves.groupby(groupby)):
+    for rob, cur in zip(trials_m.groupby(groupby, observed=False), curves.groupby(groupby, observed=False)):
         _make_curve_plots(rob[1], cur[1], rob[0])
 
 

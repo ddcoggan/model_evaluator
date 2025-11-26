@@ -11,7 +11,7 @@ from joblib import Parallel, delayed
 from utils.model_contrasts import all_models
 
 # hardware
-num_procs = 8
+num_procs = 16
 gpu = 0
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = f'{gpu}'
@@ -31,14 +31,14 @@ benchmarks = [
     #'model_vs_human',
     #'cocoa_cls',
     #'coco_occluded_vehicles',
-    'pascal3d_occluded_objects',
+    #'pascal3d_occluded_objects',
     #'texture_versus_shape_bias',
     #'imagenet',
     #'imagenet_noise',
     #'imagenet_C',
     #'imagenet_occluded',
     #'imagenet_cutmix',
-    #'occlusion_behavioral_exp1',
+    'occlusion_behavioral_exp1',
     #'occlusion_behavioral_exp2',
     #'occlusion_fmri',
     #'brainscore',
@@ -274,7 +274,7 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
                 kwargs_performance = {**kwargs, **dict(remake_plots=False)}
                 for k in ['batch_size', 'architecture', 'num_procs']:
                     del kwargs_performance[k]
-                #kwargs_performance['overwrite'] = True  # force performance analysis
+                kwargs_performance['overwrite'] = True  # force performance analysis
                 if parallel_analysis:
                     kwargs_list.append(kwargs_performance)
                 else:

@@ -3,7 +3,7 @@ from datetime import datetime
 
 MODEL_BASE = '/home/david/data/models'
 BENCHMARK_DIR = 'benchmarking'
-ZOO_DIR = '/home/david/PycharmProjects/master_scripts/DNN'
+ZOO_DIR = '/home/david/PycharmProjects/model_trainer'
 
 def now():
     return datetime.now().strftime("%y/%m/%d %H:%M:%S")
