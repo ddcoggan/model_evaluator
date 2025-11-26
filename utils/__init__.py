@@ -1,8 +1,9 @@
 # Created by David Coggan on 2023 07 10
 from datetime import datetime
 
-MODEL_BASE = '/home/tonglab/david/models'
+MODEL_BASE = '/home/david/data/models'
 BENCHMARK_DIR = 'benchmarking'
+ZOO_DIR = '/home/david/PycharmProjects/model_trainer'
 
 def now():
     return datetime.now().strftime("%y/%m/%d %H:%M:%S")
