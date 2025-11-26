@@ -12,9 +12,9 @@ from utils.model_contrasts import all_models
 
 # hardware
 num_procs = 16
-gpu = 0
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = f'{gpu}'
+#gpu = 0
+#os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
+#os.environ['CUDA_VISIBLE_DEVICES'] = f'{gpu}'
 
 # optionally split model list across 2 GPUs
 #models = {k: v for i, (k, v) in enumerate(all_models.items()) if i % 2 == gpu}
