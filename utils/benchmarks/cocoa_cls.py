@@ -625,9 +625,10 @@ class COCOA_cls_Dataset(Dataset):
         return len(self.image_paths)
 
     def __getitem__(self, idx):
-        image = np.array(Image.open(self.image_paths[idx]).convert("RGB"))
+        image = Image.open(self.image_paths[idx]).convert("RGB")
         bbox = self.bbox[idx]
-        image = image[bbox[1]:bbox[1] + bbox[3], bbox[0]:bbox[0] + bbox[2]]
+        image = image.crop(
+            (bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]))
         tensor_image = self.transform(image)
         return tensor_image, self.targets[idx]
 

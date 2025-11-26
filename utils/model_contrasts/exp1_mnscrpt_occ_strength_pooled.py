@@ -23,13 +23,13 @@ properties = {
             'architecture': 'resnet101', 'linestyle': 'solid'},
         'no occlusion\nEfficientNet-B1': {
             'architecture': 'efficientnet_b1', 'linestyle': 'dashed'},
+        'artificial 2\nResNet101': {
+            'architecture': 'resnet101', 'linestyle': 'solid'},
+        'artificial 2\nEfficientNet-B1': {
+            'architecture': 'efficientnet_b1', 'linestyle': 'dashed'},
         'artificial 1\nResNet101': {
             'architecture': 'resnet101', 'linestyle': 'solid'},
         'artificial 1\nEfficientNet-B1': {
-            'architecture': 'efficientnet_b1', 'linestyle': 'dashed'},
-        'artificial 3\nResNet101': {
-            'architecture': 'resnet101', 'linestyle': 'solid'},
-        'artificial 3\nEfficientNet-B1': {
             'architecture': 'efficientnet_b1', 'linestyle': 'dashed'},
         'natural silhouette\nResNet101': {
             'architecture': 'resnet101', 'linestyle': 'solid'},
@@ -51,16 +51,16 @@ models = {
         },
     },
     'weak occlusion': {
-        'artificial 1\nResNet101': {
+        'artificial 2\nResNet101': {
             'path': 'resnet101/occ-art3-weak_xform-cont-weak-resize',
         },
-        'artificial 1\nEfficientNet-B1': {
+        'artificial 2\nEfficientNet-B1': {
             'path': 'efficientnet_b1/occ-art3-weak_xform-cont-weak-resize',
         },
-        'artificial 3\nResNet101': {
+        'artificial 1\nResNet101': {
             'path': 'resnet101/occ-art-weak_xform-cont-weak-resize',
         },
-        'artificial 3\nEfficientNet-B1': {
+        'artificial 1\nEfficientNet-B1': {
             'path': 'efficientnet_b1/occ-art-weak_xform-cont-weak-resize',
         },
         'natural silhouette\nResNet101': {
@@ -77,16 +77,16 @@ models = {
         },
     },
     'moderate occlusion': {
-        'artificial 1\nResNet101': {
+        'artificial 2\nResNet101': {
             'path': 'resnet101/occ-art3_xform-cont-weak-resize',
         },
-        'artificial 1\nEfficientNet-B1': {
+        'artificial 2\nEfficientNet-B1': {
             'path': 'efficientnet_b1/occ-art3_xform-cont-weak-resize',
         },
-        'artificial 3\nResNet101': {
+        'artificial 1\nResNet101': {
             'path': 'resnet101/occ-art_xform-cont-weak-resize',
         },
-        'artificial 3\nEfficientNet-B1': {
+        'artificial 1\nEfficientNet-B1': {
             'path': 'efficientnet_b1/occ-art_xform-cont-weak-resize',
         },
         'natural silhouette\nResNet101': {
@@ -103,16 +103,16 @@ models = {
         },
     },
     'strong occlusion': {
-        'artificial 1\nResNet101': {
+        'artificial 2\nResNet101': {
             'path': 'resnet101/occ-art3-strong_xform-cont-weak-resize',
         },
-        'artificial 1\nEfficientNet-B1': {
+        'artificial 2\nEfficientNet-B1': {
             'path': 'efficientnet_b1/occ-art3-strong_xform-cont-weak-resize',
         },
-        'artificial 3\nResNet101': {
+        'artificial 1\nResNet101': {
             'path': 'resnet101/occ-art-strong_xform-cont-weak-resize',
         },
-        'artificial 3\nEfficientNet-B1': {
+        'artificial 1\nEfficientNet-B1': {
             'path': 'efficientnet_b1/occ-art-strong_xform-cont-weak-resize',
         },
         'natural silhouette\nResNet101': {

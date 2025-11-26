@@ -5,7 +5,10 @@ import pandas as pd
 
 # get all model contrasts and place in dict
 from .exp1_mnscrpt_occ_type import models as exp1_mnscrpt_occ_type
+from .exp1_mnscrpt_occ_type_vit import models as exp1_mnscrpt_occ_type_vit
 from .exp1_mnscrpt_occ_type_pooled import models as exp1_mnscrpt_occ_type_pooled
+from .exp1_mnscrpt_occ_type_vit_pooled import (
+    models as exp1_mnscrpt_occ_type_vit_pooled)
 from .exp1_mnscrpt_occ_strength import models as exp1_mnscrpt_occ_strength
 from .exp1_mnscrpt_occ_strength_pooled import (
     models as exp1_mnscrpt_occ_strength_pooled)
@@ -24,6 +27,7 @@ from .public_models import models as public_models
 from .pix2pix import models as pix2pix
 from .vit import models as vit
 from .recurrence import models as recurrence
+from .mnscrpt_finetune import models as mnscrpt_finetune
 #from utils.model_contrasts.VSS_2024_abstract import models as
 # VSS_2024_abstract
 #from utils.model_contrasts.CCN_2024_abstract import models as
@@ -46,10 +50,12 @@ HUMAN_CONFIG = {'humans': {
 model_contrasts = dict(
 
     #public_models=public_models,
-
+    mnscrpt_finetune=mnscrpt_finetune,
     #exp1_mnscrpt_diet=exp1_mnscrpt_diet,
     #exp1_mnscrpt_occ_type=exp1_mnscrpt_occ_type,
+    #exp1_mnscrpt_occ_type_vit=exp1_mnscrpt_occ_type_vit,
     #exp1_mnscrpt_occ_type_pooled=exp1_mnscrpt_occ_type_pooled,
+    #exp1_mnscrpt_occ_type_vit_pooled=exp1_mnscrpt_occ_type_vit_pooled,
     #exp1_mnscrpt_occ_strength=exp1_mnscrpt_occ_strength,
     #exp1_mnscrpt_occ_strength_pooled=exp1_mnscrpt_occ_strength_pooled,
     #exp1_mnscrpt_occ_strength_pooled_type_strn=\
@@ -60,8 +66,8 @@ model_contrasts = dict(
     #exp1_mnscrpt_recurrence_last_cycle=exp1_mnscrpt_recurrence_last_cycle,
     #exp1_mnscrpt_noise_blur=exp1_mnscrpt_noise_blur,
 
-    exp2_mnscrpt_recurrence_v26=exp2_mnscrpt_recurrence_v26,
-    exp2_mnscrpt_recurrence_v27=exp2_mnscrpt_recurrence_v27,
+    #exp2_mnscrpt_recurrence_v26=exp2_mnscrpt_recurrence_v26,
+    #exp2_mnscrpt_recurrence_v27=exp2_mnscrpt_recurrence_v27,
 
     #FLaBnet=FLaBnet,
     #FovealBlock=FovealBlock,
@@ -93,6 +99,8 @@ for contrast, groups in model_contrasts.items():
             # independent of other properties
             if 'readout_layer' not in info:
                 info['readout_layer'] = 'output'
+            if 'image_size' not in info:
+                info['image_size'] = 224
             if 'fillcolor' not in info:
                 info['fillcolor'] = 'tab:blue'
             if 'edgecolor' not in info:
@@ -101,6 +109,7 @@ for contrast, groups in model_contrasts.items():
                 info['linestyle'] = 'solid'
             if 'marker' not in info:
                 info['marker'] = 'o'
+
 
             # dependent on other properties
             if 'markerfillcolor' not in info:
@@ -143,7 +152,8 @@ for contrast, groups in model_contrasts.items():
                         batch_size = 1024
                     all_models[path] = {'architecture': architecture,
                                         'readout_layers': {layer},
-                                        'batch_size': batch_size}
+                                        'batch_size': batch_size,
+                                        'image_size': info['image_size']}
 
 # remove models that have not finished optimizing from model contrasts
 for contrast, group, model in models_to_exclude:

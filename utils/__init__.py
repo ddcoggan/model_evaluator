@@ -25,17 +25,25 @@ def insert_cycle(activations, batch_size=None):
                                  range(activ.shape[1])}
         return output
 
+
     # if activations are not in a dict, i.e., just model outputs
+
+    # non-recurrent models
+    if len(activations.shape) == 2 and batch_size in [
+            activations.shape[0], None]:
+        output = {'cyc-1': activations}
+        return output
 
     # 2D tensor where batch and cycle are mixed in zeroth dimension
     if batch_size is not None and activations.shape[0] > batch_size:
         cycles = activations.shape[0] // batch_size
         output = {f'cyc{c:02}': activations[c::cycles] for c in range(cycles)}
         return output
+
     # 3D tensor where cycle is first dimension
     if len(activations.shape) == 3:
         cycles = activations.shape[1]
-        assert cycles < 32, 'you sure dim1 is the cycle dim?'
+        assert cycles < 32, 'Cycles > 32, are you sure dim1 is the cycle dim?'
         output = {f'cyc{c:02}': activations[:, c, :] for c in range(cycles)}
         return output
 

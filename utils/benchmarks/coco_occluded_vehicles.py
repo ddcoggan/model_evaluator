@@ -85,7 +85,7 @@ def score_model(model_dir, architecture, batch_size, m=0, total_models=0,
     results, out_path = load_benchmark_scores(
         model_dir, BENCHMARK, overwrite)
 
-    if len(results[results.benchmark == BENCHMARK]) == 2:
+    if not results.empty and len(results[results.benchmark == BENCHMARK]) == 2:
         return False
 
     print(f'{now()} | Measuring performance for {BENCHMARK}, '

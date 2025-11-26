@@ -23,8 +23,8 @@ del DATASETS['greyscale']
 del DATASETS['texture']
 
 @torch.no_grad()
-def score_model(model_dir, architecture, batch_size, m=0, total_models=0,
-                num_procs=1, overwrite=False):
+def score_model(model_dir, architecture, batch_size, image_size=224, m=0,
+                total_models=0, num_procs=1, overwrite=False):
 
     results, out_path = load_benchmark_scores(
         model_dir, BENCHMARK, overwrite)
@@ -47,6 +47,7 @@ def score_model(model_dir, architecture, batch_size, m=0, total_models=0,
         'loaded_model': wrapped_model,
         'framework': 'pytorch',
         'batch_size': batch_size,
+        'image_size': image_size,
         'print_predictions': True,
         'num_workers': num_procs}
     Evaluate()([model_dir_fmt], subsets_to_run, **params)

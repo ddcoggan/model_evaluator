@@ -12,7 +12,8 @@ from .plot_utils import make_legend
 def make_legends(overwrite=False):
 
     for (model_contrast, model_config) in model_contrasts.items():
-        legend_dir = f'../../data/in_silico/analysis/{model_contrast}/legends'
+        legend_dir = (f'../p022_occlusion/data/in_silico/analysis'
+                      f'/{model_contrast}/legends')
         all_levels = [['level1'], ['level2'], ['level1','level2']]
         all_properties = [
             ['color'],

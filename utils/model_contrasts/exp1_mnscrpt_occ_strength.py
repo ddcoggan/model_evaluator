@@ -33,12 +33,12 @@ properties = {
         },
     'level2': {
         'no occlusion': {'color': 'w', 'edgecolor': 'k'},
-        'artificial 1 weak': {'color': cols_light['red']},
-        'artificial 1 moderate': {'color': cols['red']},
-        'artificial 1 strong': {'color': cols_dark['red']},
-        'artificial 3 weak': {'color': cols_light['blue']},
-        'artificial 3 moderate': {'color': cols['blue']},
-        'artificial 3 strong': {'color': cols_dark['blue']},
+        'artificial 2 weak': {'color': cols_light['red']},
+        'artificial 2 moderate': {'color': cols['red']},
+        'artificial 2 strong': {'color': cols_dark['red']},
+        'artificial 1 weak': {'color': cols_light['blue']},
+        'artificial 1 moderate': {'color': cols['blue']},
+        'artificial 1 strong': {'color': cols_dark['blue']},
         'natural silhouette weak': {'color': cols_light['brown']},
         'natural silhouette moderate': {'color': cols['brown']},
         'natural silhouette strong': {'color': cols_dark['brown']},
@@ -54,65 +54,65 @@ models = {
             'path': 'resnet101/xform-cont-weak-resize',
             'xpos': 0,
         },
-        'artificial 1 weak': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art3-weak_xform-cont-weak-resize',
-            'xpos': 1.5,
-        },
-        'artificial 1 moderate': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art3_xform-cont-weak-resize',
-            'xpos': 2.5,
-        },
-        'artificial 1 strong': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art3-strong_xform-cont-weak-resize',
-            'xpos': 3.5,
-        },
-        'artificial 3 weak': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art-weak_xform-cont-weak-resize',
-            'xpos': 5,
-        },
-        'artificial 3 moderate': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art_xform-cont-weak-resize',
-            'xpos': 6,
-        },
-        'artificial 3 strong': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art-strong_xform-cont-weak-resize',
-            'xpos': 7,
-        },
-        'natural silhouette weak': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-nat-untex-weak_xform-cont-weak-resize',
-            'xpos': 9.5,
-        },
-        'natural silhouette moderate': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-nat-untex_xform-cont-weak-resize',
-            'xpos': 10.5,
-        },
-        'natural silhouette strong': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-nat-untex-strong_xform-cont-weak-resize',
-            'xpos': 11.5,
-        },
         'natural weak': {
             'architecture': 'resnet101',
             'path': 'resnet101/occ-nat-weak_xform-cont-weak-resize',
-            'xpos': 13,
+            'xpos': 1.5,
         },
         'natural moderate': {
             'architecture': 'resnet101',
             'path': 'resnet101/occ-nat_xform-cont-weak-resize',
-            'xpos': 14,
+            'xpos': 2.5,
         },
         'natural strong': {
             'architecture': 'resnet101',
             'path': 'resnet101/occ-nat-strong_xform-cont-weak-resize',
-            'xpos': 15,
+            'xpos': 3.5,
+        },
+        'natural silhouette weak': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-nat-untex-weak_xform-cont-weak-resize',
+            'xpos': 5,
+        },
+        'natural silhouette moderate': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-nat-untex_xform-cont-weak-resize',
+            'xpos': 6,
+        },
+        'natural silhouette strong': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-nat-untex-strong_xform-cont-weak-resize',
+            'xpos': 7,
+        },
+        'artificial 1 weak': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-art-weak_xform-cont-weak-resize',
+            'xpos': 8.5,
+        },
+        'artificial 1 moderate': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-art_xform-cont-weak-resize',
+            'xpos': 9.5,
+        },
+        'artificial 1 strong': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-art-strong_xform-cont-weak-resize',
+            'xpos': 10.5,
+        },
+        'artificial 2 weak': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-art3-weak_xform-cont-weak-resize',
+            'xpos': 12,
+        },
+        'artificial 2 moderate': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-art3_xform-cont-weak-resize',
+            'xpos': 13,
+        },
+        'artificial 2 strong': {
+            'architecture': 'resnet101',
+            'path': 'resnet101/occ-art3-strong_xform-cont-weak-resize',
+            'xpos': 14,
         },
     },
     'EfficientNet-B1': {
@@ -121,64 +121,64 @@ models = {
             'path': 'efficientnet_b1/xform-cont-weak-resize',
             'xpos': 0,
         },
-        'artificial 1 weak': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art3-weak_xform-cont-weak-resize',
-            'xpos': 1.5,
-        },
-        'artificial 1 moderate': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art3_xform-cont-weak-resize',
-            'xpos': 2.5,
-        },
-        'artificial 1 strong': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art3-strong_xform-cont-weak-resize',
-            'xpos': 3.5,
-        },
-        'artificial 3 weak': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art-weak_xform-cont-weak-resize',
-            'xpos': 5,
-        },
-        'artificial 3 moderate': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art_xform-cont-weak-resize',
-            'xpos': 6,
-        },
-        'artificial 3 strong': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art-strong_xform-cont-weak-resize',
-            'xpos': 7,
-        },
-        'natural silhouette weak': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-nat-untex-weak_xform-cont-weak-resize',
-            'xpos': 8.5,
-        },
-        'natural silhouette moderate': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-nat-untex_xform-cont-weak-resize',
-            'xpos': 9.5,
-        },
-        'natural silhouette strong': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-nat-untex-strong_xform-cont-weak-resize',
-            'xpos': 10.5,
-        },
         'natural weak': {
             'architecture': 'efficientnet_b1',
             'path': 'efficientnet_b1/occ-nat-weak_xform-cont-weak-resize',
-            'xpos': 12,
+            'xpos': 1.5,
         },
         'natural moderate': {
             'architecture': 'efficientnet_b1',
             'path': 'efficientnet_b1/occ-nat_xform-cont-weak-resize',
-            'xpos': 13,
+            'xpos': 2.5,
         },
         'natural strong': {
             'architecture': 'efficientnet_b1',
             'path': 'efficientnet_b1/occ-nat-strong_xform-cont-weak-resize',
+            'xpos': 3.5,
+        },
+        'natural silhouette weak': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-nat-untex-weak_xform-cont-weak-resize',
+            'xpos': 5,
+        },
+        'natural silhouette moderate': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-nat-untex_xform-cont-weak-resize',
+            'xpos': 6,
+        },
+        'natural silhouette strong': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-nat-untex-strong_xform-cont-weak-resize',
+            'xpos': 7,
+        },
+        'artificial 1 weak': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-art-weak_xform-cont-weak-resize',
+            'xpos': 8.5,
+        },
+        'artificial 1 moderate': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-art_xform-cont-weak-resize',
+            'xpos': 9.5,
+        },
+        'artificial 1 strong': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-art-strong_xform-cont-weak-resize',
+            'xpos': 10.5,
+        },
+        'artificial 2 weak': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-art3-weak_xform-cont-weak-resize',
+            'xpos': 12,
+        },
+        'artificial 2 moderate': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-art3_xform-cont-weak-resize',
+            'xpos': 13,
+        },
+        'artificial 2 strong': {
+            'architecture': 'efficientnet_b1',
+            'path': 'efficientnet_b1/occ-art3-strong_xform-cont-weak-resize',
             'xpos': 14,
         },
     },
@@ -197,22 +197,22 @@ for level1, level2s in models.items():
             'path': 'cornet_s_plus/xform-cont-weak-resize',
             'xpos': 0,
         },
-        'artificial 1 weak': {
+        'artificial 2 weak': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art3-weak_xform-cont-weak-resize',
             'xpos': 1.5,
         },
-        'artificial 1 moderate': {
+        'artificial 2 moderate': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art3_xform-cont-weak-resize',
             'xpos': 2.5,
         },
-        'artificial 3 weak': {
+        'artificial 1 weak': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art-weak_xform-cont-weak-resize',
             'xpos': 4,
         },
-        'artificial 3 moderate': {
+        'artificial 1 moderate': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art_xform-cont-weak-resize',
             'xpos': 5,

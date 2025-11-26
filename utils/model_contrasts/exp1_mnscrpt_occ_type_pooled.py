@@ -14,14 +14,14 @@ properties = {
     'level1': {
         'no occlusion': {
             'color': 'w', 'edgecolor': 'k', 'linestyle': 'solid', 'xpos': 0},
+        'artificial 2': {
+            'color': 'tab:red', 'linestyle': 'solid', 'xpos': 4.5},
         'artificial 1': {
-            'color': 'tab:red', 'linestyle': 'solid', 'xpos': 1.5},
-        'artificial 3': {
-            'color': 'tab:blue', 'linestyle': 'solid', 'xpos': 2.5},
+            'color': 'tab:blue', 'linestyle': 'solid', 'xpos': 3.5},
         'natural silhouette': {
-            'color': 'tab:brown', 'linestyle': 'solid', 'xpos': 3.5},
+            'color': 'tab:brown', 'linestyle': 'solid', 'xpos': 2.5},
         'natural': {
-            'color': 'tab:green', 'linestyle': 'solid', 'xpos': 4.5},
+            'color': 'tab:green', 'linestyle': 'solid', 'xpos': 1.5},
     },
     'level2': {
         'CORnet-S+\nno occlusion\nclassification': {
@@ -30,9 +30,9 @@ properties = {
             'readout_layer': 'output'},
         'CORnet-S+\nmoderate occlusion\nclassification': {
             'readout_layer': 'output'},
-        'CORnet-S+\nno occlusion\ncontrastive': {
+        'CORnet-S+\nno occlusion\nSimCLR': {
             'readout_layer': 'IT.output'},
-        'CORnet-S+\nmoderate occlusion\ncontrastive': {
+        'CORnet-S+\nmoderate occlusion\nSimCLR': {
             'readout_layer': 'IT.output'},
         'ResNet101\nno occlusion\nclassification': {
             'readout_layer': 'output'},
@@ -58,7 +58,7 @@ models = {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/xform-cont-weak-resize',
         },
-        'CORnet-S+\nno occlusion\ncontrastive': {
+        'CORnet-S+\nno occlusion\nSimCLR': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/task-cont-weak-resize',
         },
@@ -71,7 +71,7 @@ models = {
             'path': 'efficientnet_b1/xform-cont-weak-resize',
         },
     },
-    'artificial 1': {
+    'artificial 2': {
         'CORnet-S+\nweak occlusion\nclassification': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art3-weak_xform-cont-weak-resize',
@@ -80,7 +80,7 @@ models = {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art3_xform-cont-weak-resize',
         },
-        'CORnet-S+\nmoderate occlusion\ncontrastive': {
+        'CORnet-S+\nmoderate occlusion\nSimCLR': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art3_task-cont-weak-resize',
         },
@@ -109,7 +109,7 @@ models = {
             'path': 'efficientnet_b1/occ-art3-strong_xform-cont-weak-resize',
         },
     },
-    'artificial 3': {
+    'artificial 1': {
         'CORnet-S+\nweak occlusion\nclassification': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art-weak_xform-cont-weak-resize',
@@ -118,7 +118,7 @@ models = {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art_xform-cont-weak-resize',
         },
-        'CORnet-S+\nmoderate occlusion\ncontrastive': {
+        'CORnet-S+\nmoderate occlusion\nSimCLR': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-art_task-cont-weak-resize',
         },
@@ -156,7 +156,7 @@ models = {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-nat-untex_xform-cont-weak-resize',
         },
-        'CORnet-S+\nmoderate occlusion\ncontrastive': {
+        'CORnet-S+\nmoderate occlusion\nSimCLR': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-nat-untex_task-cont-weak-resize',
         },
@@ -194,7 +194,7 @@ models = {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-nat_xform-cont-weak-resize',
         },
-        'CORnet-S+\nmoderate occlusion\ncontrastive': {
+        'CORnet-S+\nmoderate occlusion\nSimCLR': {
             'architecture': 'cornet_s_plus',
             'path': 'cornet_s_plus/occ-nat_task-cont-weak-resize',
         },

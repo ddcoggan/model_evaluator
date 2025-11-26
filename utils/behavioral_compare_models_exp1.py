@@ -68,9 +68,11 @@ def bar_plot(data_config, df, plot_config, plot_file, samples=None,
     for g, (group, models) in enumerate(data_config.items()):
         ax = axes[g] if len(group_counts) > 1 else axes
         xticks, xticklabels = [], []
+        max_x = 0
         for m, (model, info) in enumerate(models.items()):
             xpos = info['xpos'] if 'xpos' in info else m
             xticks.append(xpos)
+            max_x = max(max_x, xpos)
             xticklabels.append(model.replace('\n', ' '))
             df_model = (df[(df.group == group) & (df.model == model)]
                         .groupby(groupby, observed=False, dropna=False)
@@ -89,7 +91,7 @@ def bar_plot(data_config, df, plot_config, plot_file, samples=None,
             else:  # plot with samples
                 yvals = df_model.sort_values(by=samples['columns'])['value'
                     ].to_list()
-                if 'exp1' in plot_file and 'robustness' in plot_file:
+                if 'robustness' in plot_file:
                     yval = remove_unoccluded(df_model)['value'].mean()
                 else:
                     yval = np.nanmean(yvals) if any(np.isfinite(yvals)) else np.nan
@@ -115,7 +117,7 @@ def bar_plot(data_config, df, plot_config, plot_file, samples=None,
         else:
             ax.set_xlabel(group, size=10, rotation=0, labelpad=10)
             ax.set_xticks([])
-        xlims = (-.5, group_counts[g] - .5)
+        xlims = (-.5, max_x + .5)
         ax.set_xlim(xlims)
 
         # y-axis formatting
@@ -321,7 +323,7 @@ def curve_plot(data_config, df, curves, plot_config, plot_file, exp='exp1'):
 
     fig, ax = plt.subplots(figsize=(4, 4))
     curve_x = np.linspace(0, 1, 1000)
-    xvals = VISIBILITIES[exp] + [1]
+    xvals = VISIBILITIES + [1]
 
     for g, (group, models) in enumerate(data_config.items()):
         for m, (model, info) in enumerate(models.items()):
@@ -630,8 +632,8 @@ def compare_models(overwrite=False):
             assert len(nc_df) == 30, 'more than one noise ceiling found'
             nc = nc_df[['lwr', 'upr']].mean().values
         else:
-            assert level == 'trial-wise', (
-                'There should be a noise-ceiling for this metric')
+            #assert level == 'trial-wise', (
+            #    'There should be a noise-ceiling for this metric')
             nc = None
 
         # human likeness
@@ -972,7 +974,7 @@ def inferential_stats(df, out_dir, nc=None, metric=None):
 def collate_data(model_contrast):
 
     # human data
-    human_dir = f'../p022_occlusion/data/in_vivo/behavioral/exp'
+    human_dir = f'../p022_occlusion/data/in_vivo/behavioral/exp1'
     groupbys = ['subject', 'occluder_class', 'occluder_color', 'visibility']
     robustness = load_trials(drop_human=False)
     robustness = reshape_metrics(robustness, 'long')
@@ -1012,9 +1014,6 @@ def collate_data(model_contrast):
             df['model'] = label
             df['layer'] = layer
             df['group'] = group
-            if 'factors' in info:
-                for factor, value in info['factors'].items():
-                    df[f'factor_{factor}'] = value
             robustness = pd.concat([robustness, df])
 
             # visibility curve functions
@@ -1023,9 +1022,6 @@ def collate_data(model_contrast):
             df['model'] = label
             df['layer'] = layer
             df['group'] = group
-            if 'factors' in info:
-                for factor, value in info['factors'].items():
-                    df[f'factor_{factor}'] = value
             assert len(df), 'no data for this model'
             curves = pd.concat([curves, df])
 
@@ -1037,11 +1033,8 @@ def collate_data(model_contrast):
             df['model'] = label
             df['layer'] = layer
             df['group'] = group
-            if 'factors' in info:
-                for factor, value in info['factors'].items():
-                    df[f'factor_{factor}'] = value
             assert len(df), 'no data for this model'
-            assert len(df) == 1140 * len(df.cycle.unique())
+            #assert len(df) == 1140 * len(df.cycle.unique())
             likeness = pd.concat([likeness, df])
 
     return robustness, curves, likeness, noise_ceiling

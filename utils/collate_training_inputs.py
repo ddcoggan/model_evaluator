@@ -14,10 +14,8 @@ def collate_training_inputs(overwrite=False):
 
     for (model_contrast, model_config) in model_contrasts.items():
 
-        outdir = f'../data/in_silico/analysis/{model_contrast}'
+        outdir = f'../p022_occlusion/data/in_silico/analysis/{model_contrast}'
         outpath = op.join(outdir, 'sample_training_inputs.svg')
-        if model_contrast == 'public_models':
-            continue
         if not op.isfile(outpath) or overwrite:
             os.makedirs(outdir, exist_ok=True)
             num_models = sum(get_group_counts(model_config))
@@ -26,6 +24,8 @@ def collate_training_inputs(overwrite=False):
             model_counter = 0
             for g, (group, models) in enumerate(model_config.items()):
                 for m, (model, info) in enumerate(models.items()):
+                    if 'pretrained' in info['path']:
+                        continue
                     ax = axes[model_counter]
                     image_path = op.join(MODEL_BASE, info['path'],
                                          'sample_train_inputs', 'tiled.png')
