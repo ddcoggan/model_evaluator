@@ -27,42 +27,32 @@ for color, rgb in cols.items():
 properties = {
     'all': {'readout_layer': 'output'},
     'level1': {
-        'CORnet-S+': {'linestyle': 'solid'},
+        #'CORnet-S+': {'linestyle': 'solid'},
         'ResNet101': {'linestyle': 'dashed'},
         'EfficientNet-B1': {'linestyle': 'dotted'},
         },
     'level2': {
-        'no occlusion': {'color': 'w', 'edgecolor': 'k'},
+        #'no occlusion': {'color': 'w', 'edgecolor': 'k'},
         'artificial 2 weak': {'color': cols_light['red']},
-        'artificial 2 moderate': {'color': cols['red']},
+        #'artificial 2 moderate': {'color': cols['red']},
         'artificial 2 strong': {'color': cols_dark['red']},
         'artificial 1 weak': {'color': cols_light['blue']},
-        'artificial 1 moderate': {'color': cols['blue']},
+        #'artificial 1 moderate': {'color': cols['blue']},
         'artificial 1 strong': {'color': cols_dark['blue']},
         'natural silhouette weak': {'color': cols_light['brown']},
-        'natural silhouette moderate': {'color': cols['brown']},
+        #'natural silhouette moderate': {'color': cols['brown']},
         'natural silhouette strong': {'color': cols_dark['brown']},
         'natural weak': {'color': cols_light['green']},
-        'natural moderate': {'color': cols['green']},
+        #'natural moderate': {'color': cols['green']},
         'natural strong': {'color': cols_dark['green']},
     }}
 
 models = {
     'ResNet101': {
-        'no occlusion': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/xform-cont-weak-resize',
-            'xpos': 0,
-        },
         'natural weak': {
             'architecture': 'resnet101',
             'path': 'resnet101/occ-nat-weak_xform-cont-weak-resize',
             'xpos': 1.5,
-        },
-        'natural moderate': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-nat_xform-cont-weak-resize',
-            'xpos': 2.5,
         },
         'natural strong': {
             'architecture': 'resnet101',
@@ -74,11 +64,6 @@ models = {
             'path': 'resnet101/occ-nat-untex-weak_xform-cont-weak-resize',
             'xpos': 5,
         },
-        'natural silhouette moderate': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-nat-untex_xform-cont-weak-resize',
-            'xpos': 6,
-        },
         'natural silhouette strong': {
             'architecture': 'resnet101',
             'path': 'resnet101/occ-nat-untex-strong_xform-cont-weak-resize',
@@ -88,11 +73,6 @@ models = {
             'architecture': 'resnet101',
             'path': 'resnet101/occ-art-weak_xform-cont-weak-resize',
             'xpos': 8.5,
-        },
-        'artificial 1 moderate': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art_xform-cont-weak-resize',
-            'xpos': 9.5,
         },
         'artificial 1 strong': {
             'architecture': 'resnet101',
@@ -104,11 +84,6 @@ models = {
             'path': 'resnet101/occ-art3-weak_xform-cont-weak-resize',
             'xpos': 12,
         },
-        'artificial 2 moderate': {
-            'architecture': 'resnet101',
-            'path': 'resnet101/occ-art3_xform-cont-weak-resize',
-            'xpos': 13,
-        },
         'artificial 2 strong': {
             'architecture': 'resnet101',
             'path': 'resnet101/occ-art3-strong_xform-cont-weak-resize',
@@ -116,20 +91,10 @@ models = {
         },
     },
     'EfficientNet-B1': {
-        'no occlusion': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/xform-cont-weak-resize',
-            'xpos': 0,
-        },
         'natural weak': {
             'architecture': 'efficientnet_b1',
             'path': 'efficientnet_b1/occ-nat-weak_xform-cont-weak-resize',
             'xpos': 1.5,
-        },
-        'natural moderate': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-nat_xform-cont-weak-resize',
-            'xpos': 2.5,
         },
         'natural strong': {
             'architecture': 'efficientnet_b1',
@@ -141,11 +106,6 @@ models = {
             'path': 'efficientnet_b1/occ-nat-untex-weak_xform-cont-weak-resize',
             'xpos': 5,
         },
-        'natural silhouette moderate': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-nat-untex_xform-cont-weak-resize',
-            'xpos': 6,
-        },
         'natural silhouette strong': {
             'architecture': 'efficientnet_b1',
             'path': 'efficientnet_b1/occ-nat-untex-strong_xform-cont-weak-resize',
@@ -156,11 +116,6 @@ models = {
             'path': 'efficientnet_b1/occ-art-weak_xform-cont-weak-resize',
             'xpos': 8.5,
         },
-        'artificial 1 moderate': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art_xform-cont-weak-resize',
-            'xpos': 9.5,
-        },
         'artificial 1 strong': {
             'architecture': 'efficientnet_b1',
             'path': 'efficientnet_b1/occ-art-strong_xform-cont-weak-resize',
@@ -170,11 +125,6 @@ models = {
             'architecture': 'efficientnet_b1',
             'path': 'efficientnet_b1/occ-art3-weak_xform-cont-weak-resize',
             'xpos': 12,
-        },
-        'artificial 2 moderate': {
-            'architecture': 'efficientnet_b1',
-            'path': 'efficientnet_b1/occ-art3_xform-cont-weak-resize',
-            'xpos': 13,
         },
         'artificial 2 strong': {
             'architecture': 'efficientnet_b1',

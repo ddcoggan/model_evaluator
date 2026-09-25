@@ -41,19 +41,38 @@ for arch in models_tv_list:
         i.split('_Weights')[0].lower() == arch][0]
 
 # models outside of torchvision library
-models_custom = {
+models_cornet = {
     'cornet_z': 'CORnet-Z',
     'cornet_rt': 'CORnet-RT',
     'cornet_s': 'CORnet-S'}
 
+#models_dino = {
+#    'vit7b16': 'DINOv3'
+#}
+
 # combine model lists and sort
-all_models_dict = {**models_tv, **models_custom}
+all_models_dict = {**models_tv, **models_cornet}
 all_models = {k: all_models_dict[k] for k in sorted(all_models_dict)}
 model_counter = 0
 for a, (arch, arch_camel) in enumerate(all_models.items()):
 
     # get weights
-    if arch not in models_custom:
+    if arch in models_cornet:
+
+        color = COLS[model_counter % len(COLS)]
+        edgecolor = EDGECOLORS[int(model_counter / len(COLS))]
+        marker = MARKERS[int(model_counter / len(COLS))]
+        models['public_models'][arch_camel] = {
+            'architecture': arch,
+            'path': f'{arch}/pretrained',
+            'readout_layer': 'output',
+            'color': color,
+            'edgecolor': edgecolor,
+            'marker': marker,
+            'xpos': model_counter}
+        model_counter += 1
+
+    else:
 
         # rename default model dir
         default = getattr(torchvision.models,  f'{arch_camel}_Weights').DEFAULT
@@ -110,20 +129,6 @@ for a, (arch, arch_camel) in enumerate(all_models.items()):
                 'xpos': model_counter}
             model_counter += 1
 
-    else:
-        color = COLS[model_counter % len(COLS)]
-        edgecolor = EDGECOLORS[int(model_counter / len(COLS))]
-        marker = MARKERS[int(model_counter / len(COLS))]
-        models['public_models'][arch_camel] = {
-            'architecture': arch,
-            'path': f'{arch}/pretrained',
-            'readout_layer': 'output',
-            'color': color,
-            'edgecolor': edgecolor,
-            'marker': marker,
-            'xpos': model_counter}
-        model_counter += 1
-
 
 # add model parameters to model properties
 from torch import nn
@@ -159,10 +164,10 @@ for a, (arch, arch_camel) in enumerate(all_models.items()):
         new_models = True
 
         # get model
-        if arch not in models_custom:
-            model = getattr(torchvision.models, arch)()
-        else:
+        if arch in models_cornet:
             model = get_model(arch, {})
+        else:
+            model = getattr(torchvision.models, arch)()
 
         # calculate batch size
         device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')

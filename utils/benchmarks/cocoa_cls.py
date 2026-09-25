@@ -42,7 +42,7 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
-sys.path.append('/mnt/HDD1_12TB/repos/ORCNN')
+sys.path.append(op.expanduser('~/data/repos/ORCNN'))
 #from detectron2.data.datasets import load_coco_json
 #from detectron2.data.datasets.coco import (
 #    register_coco_instances, convert_to_coco_dict)
@@ -56,14 +56,14 @@ from utils.load_benchmark_scores import load_benchmark_scores
 np.random.seed(42)
 
 BENCHMARK = 'COCOA_cls'
-BENCHMARK_BASE = f'/home/tonglab/Datasets/{BENCHMARK}'
-DATASET_BASE = op.expanduser('~/david/datasets/images/COCO')
+BENCHMARK_BASE = op.expanduser(f'~/Datasets/{BENCHMARK}')
+DATASET_BASE = op.expanduser('~/data/datasets/images/COCO')
 DATA_TYPE = 'val2014'
 COCO_AMODAL_PATH = op.join(
     DATASET_BASE, f'annotations/COCO_amodal_{DATA_TYPE}.json')
 ANNOTATIONS_PATH = op.join(BENCHMARK_BASE, f'cocoa_cls_{DATA_TYPE}.json')
 IMAGENET_METADATA_PATH = op.expanduser(
-    '~/david/datasets/images/ILSVRC2012/imagenet_class_index.json')
+    '~/data/datasets/images/ILSVRC2012/imagenet_class_index.json')
 SAMPLE_IMAGE_DIR = op.join(BENCHMARK_BASE, 'sample_images')
 
 

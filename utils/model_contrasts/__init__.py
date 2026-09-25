@@ -15,7 +15,6 @@ from .exp1_mnscrpt_occ_strength_pooled import (
 from .exp1_mnscrpt_occ_strength_pooled_type_strn import (
     models as exp1_mnscrpt_occ_strength_pooled_type_strn)
 from .exp1_mnscrpt_noise_blur import models as exp1_mnscrpt_noise_blur
-from .exp1_mnscrpt_occ_task import models as exp1_mnscrpt_occ_task
 from .exp1_mnscrpt_occ_task_pooled import models as exp1_mnscrpt_occ_task_pooled
 from .exp2_mnscrpt_recurrence_v26 import models as exp2_mnscrpt_recurrence_v26
 from .exp2_mnscrpt_recurrence_v27 import models as exp2_mnscrpt_recurrence_v27
@@ -27,7 +26,10 @@ from .public_models import models as public_models
 from .pix2pix import models as pix2pix
 from .vit import models as vit
 from .recurrence import models as recurrence
-from .mnscrpt_finetune import models as mnscrpt_finetune
+from .mnscrpt_final import models as mnscrpt_final
+from .mnscrpt_final_weak import models as mnscrpt_final_weak
+from .mnscrpt_final_finetune import models as mnscrpt_final_finetune
+from .mnscrpt_final_task import models as mnscrpt_final_task
 #from utils.model_contrasts.VSS_2024_abstract import models as
 # VSS_2024_abstract
 #from utils.model_contrasts.CCN_2024_abstract import models as
@@ -50,7 +52,10 @@ HUMAN_CONFIG = {'humans': {
 model_contrasts = dict(
 
     #public_models=public_models,
-    mnscrpt_finetune=mnscrpt_finetune,
+    #mnscrpt_final=mnscrpt_final,
+    #mnscrpt_final_weak=mnscrpt_final_weak,
+    #mnscrpt_final_finetune=mnscrpt_final_finetune,
+    #mnscrpt_final_task=mnscrpt_final_task,
     #exp1_mnscrpt_diet=exp1_mnscrpt_diet,
     #exp1_mnscrpt_occ_type=exp1_mnscrpt_occ_type,
     #exp1_mnscrpt_occ_type_vit=exp1_mnscrpt_occ_type_vit,
@@ -64,7 +69,7 @@ model_contrasts = dict(
     #exp1_mnscrpt_occ_task_pooled=exp1_mnscrpt_occ_task_pooled,
     #exp1_mnuscrpt_recurrence_all_cycles=exp1_mnscrpt_recurrence_all_cycles,
     #exp1_mnscrpt_recurrence_last_cycle=exp1_mnscrpt_recurrence_last_cycle,
-    #exp1_mnscrpt_noise_blur=exp1_mnscrpt_noise_blur,
+    exp1_mnscrpt_noise_blur=exp1_mnscrpt_noise_blur,
 
     #exp2_mnscrpt_recurrence_v26=exp2_mnscrpt_recurrence_v26,
     #exp2_mnscrpt_recurrence_v27=exp2_mnscrpt_recurrence_v27,
@@ -110,7 +115,6 @@ for contrast, groups in model_contrasts.items():
             if 'marker' not in info:
                 info['marker'] = 'o'
 
-
             # dependent on other properties
             if 'markerfillcolor' not in info:
                 info['markerfillcolor'] = info['fillcolor']
@@ -138,8 +142,10 @@ for contrast, groups in model_contrasts.items():
                 models_to_exclude.append([contrast, group, model])
             else:
 
-                # if item already exists, just add any new readout layers
+                # if item already exists
                 if path in all_models:
+
+                    # add any new readout layers
                     all_models[path]['readout_layers'].add(layer)
 
                 # else add new item
@@ -150,10 +156,12 @@ for contrast, groups in model_contrasts.items():
                         ].item()
                     else:
                         batch_size = 1024
-                    all_models[path] = {'architecture': architecture,
-                                        'readout_layers': {layer},
-                                        'batch_size': batch_size,
-                                        'image_size': info['image_size']}
+                    all_models[path] = {
+                        'architecture': architecture,
+                        'readout_layers': {layer},
+                        'batch_size': batch_size,
+                        'image_size': info['image_size'],
+                    }
 
 # remove models that have not finished optimizing from model contrasts
 for contrast, group, model in models_to_exclude:

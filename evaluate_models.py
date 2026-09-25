@@ -23,29 +23,37 @@ models = all_models
 # some benchmarks require models trained to classify imagenet
 supervised_models = {k: v for k, v in models.items() if 'task-cont' not in k}
 
-benchmarks = [
-    #'make_legends',
-    #'plot_filters',
-    #'collate_training_inputs',
-    #'coco_instaorder_cls',
-    #'model_vs_human',
-    #'cocoa_cls',
-    #'coco_occluded_vehicles',
-    #'pascal3d_occluded_objects',
-    #'texture_versus_shape_bias',
-    #'imagenet',
-    #'imagenet_noise',
-    #'imagenet_C',
-    #'imagenet_occluded',
-    #'imagenet_cutmix',
-    'occlusion_behavioral_exp1',
-    #'occlusion_behavioral_exp2',
-    #'occlusion_fmri',
-    #'brainscore',
-]
+def main():
 
-# start running benchmarks
-start = time.time()
+    start = time.time()
+
+    #make_legends()
+    #plot_filters()
+    #collate_training_inputs()
+    #occlusion_behavioral(['exp1'])
+    #occlusion_behavioral_exp1_resize()
+    #occlusion_behavioral_exp1_resize80()
+    #occlusion_behavioral_exp1_rotate()
+    #occlusion_behavioral_exp1_resize_rotate()
+    #occlusion_behavioral_exp2()
+    imagenet()
+    imagenet_occluded()
+    imagenet_noise()
+    imagenet_C()
+    #pascal3d_occluded_objects()
+    #coco_occluded_vehicles()
+    #model_vs_human()
+    #imagenet_cutmix()
+    #cocoa_cls()  # change image paths in annotations
+    #texture_versus_shape_bias()
+
+    # coco_instaorder_cls()
+    #occlusion_fmri()
+    #brainscore()
+
+    finish = time.time()
+    print(f'Done. Total time: {str(datetime.timedelta(seconds=finish-start))}')
+
 
 # get master scripts
 for script in ['seconds_to_text', 'plot_utils', 'math_functions', 'Occlude',
@@ -59,175 +67,22 @@ for script in ['seconds_to_text', 'plot_utils', 'math_functions', 'Occlude',
         assert len(script_orig) == 1
         os.system(f'ln -s {script_orig[0]} utils/{script}.py')
 
-if 'make_legends' in benchmarks:
+def make_legends():
     print('Making model contrast legends...')
     from utils.make_legends import make_legends
     make_legends(overwrite=False)
 
-if 'plot_filters' in benchmarks:
+def plot_filters():
     print('Plotting convolutional filters...')
     from utils.plot_filters import plot_filters
     plot_filters(models, overwrite=False)
 
-if 'collate_training_inputs' in benchmarks:
+def collate_training_inputs():
     print('Collating training inputs...')
     from utils.collate_training_inputs import collate_training_inputs
     collate_training_inputs(overwrite=False)
 
-if 'coco_instaorder_cls' in benchmarks:
-    print('COCO Instaorder benchmark...')
-    from utils.benchmarks.coco_instaorder_cls import (
-        make_coco_instaorder_cls_dataset, score_model)
-    make_coco_instaorder_cls_dataset(num_procs=num_procs)
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'model_vs_human' in benchmarks:
-    print('Model-vs-Human benchmark...')
-    from utils.benchmarks.model_vs_human import score_model
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=64, #info['batch_size'],
-            image_size=info['image_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'cocoa_cls' in benchmarks:
-    print('COCOA cls benchmark...')
-    from utils.benchmarks.cocoa_cls import (
-        make_cocoa_cls_dataset, score_model)
-    #make_cocoa_cls_dataset()
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=64, #info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'coco_occluded_vehicles' in benchmarks:
-    print('COCO Occluded Vehicles benchmark...')
-    from utils.benchmarks.coco_occluded_vehicles import score_model
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=64,#info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'pascal3d_occluded_objects' in benchmarks:
-    print('PASCAL3D+ Occluded Objects benchmark...')
-    from utils.benchmarks.pascal3d_occluded_objects import score_model
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=64,#info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'texture_versus_shape_bias' in benchmarks:
-    print('Texture versus shape bias benchmark...')
-    from utils.benchmarks.texture_versus_shape_bias import score_model
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=64, #info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'imagenet' in benchmarks:
-    print('ImageNet benchmark...')
-    from utils.benchmarks.imagenet import score_model
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        architecture = info['architecture']
-        score_model(
-            model_dir=model_dir,
-            architecture=architecture,
-            batch_size=64, #info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'imagenet_noise' in benchmarks:
-    print('ImageNet-Noise benchmark...')
-    from utils.benchmarks.imagenet_noise import (
-        score_model)
-    #make_imagenet_noise_dataset(overwrite=False, num_procs=num_procs)
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=64, #info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'imagenet_C' in benchmarks:
-    print('ImageNet-C benchmark...')
-    from utils.benchmarks.imagenet_C import score_model
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        architecture = info['architecture']
-        score_model(
-            model_dir=model_dir,
-            architecture=architecture,
-            batch_size=info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'imagenet_occluded' in benchmarks:
-    print('ImageNet-Occluded benchmark...')
-    from utils.benchmarks.imagenet_occluded import score_model, make_dataset
-    #make_dataset(overwrite=False, num_procs=num_procs)
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if 'imagenet_cutmix' in benchmarks:
-    print('ImageNet-CutMix benchmark...')
-    from utils.benchmarks.imagenet_cutmix import score_model
-    for m, (model_dir, info) in enumerate(supervised_models.items()):
-        score_model(
-            model_dir=model_dir,
-            architecture=info['architecture'],
-            batch_size=info['batch_size'],
-            m=m,
-            total_models=len(supervised_models),
-            overwrite=False,
-            num_procs=num_procs)
-
-if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
+def occlusion_behavioral(exps):
     print('Behavioral benchmarks...')
     from utils.benchmarks.occlusion_behavioral_exp1 import (
         make_pca_dataset, make_svc_dataset, train_svc)
@@ -245,14 +100,15 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
                 total_models=len(models),
                 layer=layer,
                 overwrite=False,
-                num_procs=num_procs)
+                num_procs=num_procs,
+            )
 
             # ensure transfer learning used in both experiments is performed
             if layer != 'output':
                 kwargs['overwrite'] = train_svc(**kwargs)
 
     # Experiment 1
-    if 'occlusion_behavioral_exp1' in benchmarks:
+    if 'exp1' in exps:
         from utils.benchmarks.occlusion_behavioral_exp1 import (
             get_responses, analyse_performance)
         parallel_analysis = True
@@ -269,7 +125,8 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
                     total_models=len(models),
                     layers=[layer],
                     overwrite=False,
-                    num_procs=num_procs)
+                    num_procs=num_procs,
+                )
                 kwargs['overwrite'] = get_responses(**kwargs)
                 kwargs_performance = {**kwargs, **dict(remake_plots=False)}
                 for k in ['batch_size', 'architecture', 'num_procs']:
@@ -282,11 +139,11 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
         if parallel_analysis:
             overwrite_analyses = Parallel(n_jobs=num_procs)(
                 delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
-        from utils.behavioral_compare_models_exp1 import compare_models
-        compare_models(overwrite=True)
+        #from utils.behavioral_compare_models_exp1 import compare_models
+        #compare_models(overwrite=True)
 
     # Experiment 2
-    if 'occlusion_behavioral_exp2' in benchmarks:
+    if 'exp2' in exps:
         from utils.benchmarks.occlusion_behavioral_exp2 import (
             get_responses, analyse_performance)
         parallel_analysis = True
@@ -329,7 +186,294 @@ if any([f'occlusion_behavioral_exp{i}' in benchmarks for i in [1, 2]]):
         evaluate_salience(model_dir, m, len(model_dirs), overwrite=False)
         plot_pixel_attribution(model_dir, m, len(model_dirs), overwrite=False)
     compare_models_pixel(overwrite=False)
-    
+    """
+
+# Experiment 1 with crop/resizing test images
+def occlusion_behavioral_exp1_resize():
+    from utils.benchmarks.occlusion_behavioral_exp1_resize import (
+        get_responses, analyse_performance)
+
+    parallel_analysis = True
+    kwargs_list = []  # for parallel analysis
+    for m, (model_dir, info) in enumerate(models.items()):
+        architecture = info['architecture']
+        readout_layers = info['readout_layers']
+        for layer in readout_layers:
+            kwargs = dict(
+                model_dir=model_dir,
+                architecture=architecture,
+                batch_size=64,  # info['batch_size'],
+                m=m,
+                total_models=len(models),
+                layers=[layer],
+                overwrite=False,
+                num_procs=num_procs)
+            kwargs['overwrite'] = get_responses(**kwargs)
+            kwargs_performance = {**kwargs, **dict(remake_plots=False)}
+            for k in ['batch_size', 'architecture', 'num_procs']:
+                del kwargs_performance[k]
+            # kwargs_performance['overwrite'] = True  # force analysis
+            if parallel_analysis:
+                kwargs_list.append(kwargs_performance)
+            else:
+                kwargs['overwrite'] = analyse_performance(**kwargs_performance)
+    if parallel_analysis:
+        overwrite_analyses = Parallel(n_jobs=num_procs)(
+            delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
+
+# Experiment 1 with crop/resizing test images
+def occlusion_behavioral_exp1_resize80():
+    from utils.benchmarks.occlusion_behavioral_exp1_resize80 import (
+        get_responses, analyse_performance)
+
+    parallel_analysis = True
+    kwargs_list = []  # for parallel analysis
+    for m, (model_dir, info) in enumerate(models.items()):
+        architecture = info['architecture']
+        readout_layers = info['readout_layers']
+        for layer in readout_layers:
+            kwargs = dict(
+                model_dir=model_dir,
+                architecture=architecture,
+                batch_size=64,  # info['batch_size'],
+                m=m,
+                total_models=len(models),
+                layers=[layer],
+                overwrite=False,
+                num_procs=num_procs)
+            kwargs['overwrite'] = get_responses(**kwargs)
+            kwargs_performance = {**kwargs, **dict(remake_plots=False)}
+            for k in ['batch_size', 'architecture', 'num_procs']:
+                del kwargs_performance[k]
+            # kwargs_performance['overwrite'] = True  # force analysis
+            if parallel_analysis:
+                kwargs_list.append(kwargs_performance)
+            else:
+                kwargs['overwrite'] = analyse_performance(**kwargs_performance)
+    if parallel_analysis:
+        overwrite_analyses = Parallel(n_jobs=num_procs)(
+            delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
+
+# Experiment 1 with rotating test images
+def occlusion_behavioral_exp1_rotate():
+    from utils.benchmarks.occlusion_behavioral_exp1_rotate import (
+        get_responses, analyse_performance)
+
+    parallel_analysis = True
+    kwargs_list = []  # for parallel analysis
+    for m, (model_dir, info) in enumerate(models.items()):
+        architecture = info['architecture']
+        readout_layers = info['readout_layers']
+        for layer in readout_layers:
+            kwargs = dict(
+                model_dir=model_dir,
+                architecture=architecture,
+                batch_size=64,  # info['batch_size'],
+                m=m,
+                total_models=len(models),
+                layers=[layer],
+                overwrite=False,
+                num_procs=num_procs)
+            kwargs['overwrite'] = get_responses(**kwargs)
+            kwargs_performance = {**kwargs, **dict(remake_plots=False)}
+            for k in ['batch_size', 'architecture', 'num_procs']:
+                del kwargs_performance[k]
+            # kwargs_performance['overwrite'] = True  # force analysis
+            if parallel_analysis:
+                kwargs_list.append(kwargs_performance)
+            else:
+                kwargs['overwrite'] = analyse_performance(**kwargs_performance)
+    if parallel_analysis:
+        overwrite_analyses = Parallel(n_jobs=num_procs)(
+            delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
+
+# Experiment 1 with crop/resizing and rotating test images
+def occlusion_behavioral_exp1_resize_rotate():
+    from utils.benchmarks.occlusion_behavioral_exp1_resize_rotate import (
+        get_responses, analyse_performance)
+
+    parallel_analysis = True
+    kwargs_list = []  # for parallel analysis
+    for m, (model_dir, info) in enumerate(models.items()):
+        architecture = info['architecture']
+        readout_layers = info['readout_layers']
+        for layer in readout_layers:
+            kwargs = dict(
+                model_dir=model_dir,
+                architecture=architecture,
+                batch_size=64,  # info['batch_size'],
+                m=m,
+                total_models=len(models),
+                layers=[layer],
+                overwrite=False,
+                num_procs=num_procs)
+            kwargs['overwrite'] = get_responses(**kwargs)
+            kwargs_performance = {**kwargs, **dict(remake_plots=False)}
+            for k in ['batch_size', 'architecture', 'num_procs']:
+                del kwargs_performance[k]
+            # kwargs_performance['overwrite'] = True  # force analysis
+            if parallel_analysis:
+                kwargs_list.append(kwargs_performance)
+            else:
+                kwargs['overwrite'] = analyse_performance(**kwargs_performance)
+    if parallel_analysis:
+        overwrite_analyses = Parallel(n_jobs=num_procs)(
+            delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
+
+def imagenet():
+    print('ImageNet benchmark...')
+    from utils.benchmarks.imagenet import score_model
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        architecture = info['architecture']
+        score_model(
+            model_dir=model_dir,
+            architecture=architecture,
+            batch_size=64, #info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def imagenet_occluded():
+    print('ImageNet-Occluded benchmark...')
+    from utils.benchmarks.imagenet_occluded import score_model, make_dataset
+    #make_dataset(overwrite=False, num_procs=num_procs)
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def pascal3d_occluded_objects():
+    print('PASCAL3D+ Occluded Objects benchmark...')
+    from utils.benchmarks.pascal3d_occluded_objects import score_model
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=64,#info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def coco_instaorder_cls():
+    print('COCO Instaorder benchmark...')
+    from utils.benchmarks.coco_instaorder_cls import (
+        make_coco_instaorder_cls_dataset, score_model)
+    make_coco_instaorder_cls_dataset(num_procs=num_procs)
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def model_vs_human():
+    print('Model-vs-Human benchmark...')
+    from utils.benchmarks.model_vs_human import score_model
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=64, #info['batch_size'],
+            image_size=info['image_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def cocoa_cls():
+    print('COCOA cls benchmark...')
+    from utils.benchmarks.cocoa_cls import (
+        make_cocoa_cls_dataset, score_model)
+    #make_cocoa_cls_dataset()
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=64, #info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def coco_occluded_vehicles():
+    print('COCO Occluded Vehicles benchmark...')
+    from utils.benchmarks.coco_occluded_vehicles import score_model
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=64,#info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def texture_versus_shape_bias():
+    print('Texture versus shape bias benchmark...')
+    from utils.benchmarks.texture_versus_shape_bias import score_model
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=64, #info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def imagenet_noise():
+    print('ImageNet-Noise benchmark...')
+    from utils.benchmarks.imagenet_noise import (
+        score_model)
+    #make_imagenet_noise_dataset(overwrite=False, num_procs=num_procs)
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=64, #info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def imagenet_C():
+    print('ImageNet-C benchmark...')
+    from utils.benchmarks.imagenet_C import score_model
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        architecture = info['architecture']
+        score_model(
+            model_dir=model_dir,
+            architecture=architecture,
+            batch_size=info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+def imagenet_cutmix():
+    print('ImageNet-CutMix benchmark...')
+    from utils.benchmarks.imagenet_cutmix import score_model
+    for m, (model_dir, info) in enumerate(supervised_models.items()):
+        score_model(
+            model_dir=model_dir,
+            architecture=info['architecture'],
+            batch_size=info['batch_size'],
+            m=m,
+            total_models=len(supervised_models),
+            overwrite=False,
+            num_procs=num_procs)
+
+"""
 print('fMRI benchmark...')
 from utils.fMRI_benchmark import (get_model_responses, RSA_fMRI,
                                   get_prednet_responses,
@@ -364,6 +508,6 @@ for m, model_dir in enumerate(model_dirs):
 compare_models_brainscore(overwrite=recompare_models)
 """
 
-finish = time.time()
-print(f'Done. Total time: {str(datetime.timedelta(seconds=finish-start))}')
+if __name__ == '__main__':
+    main()
 

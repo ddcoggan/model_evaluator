@@ -16,7 +16,7 @@ from utils.AverageMeter import AverageMeter
 from utils.get_trained_model import get_trained_model
 from utils.load_benchmark_scores import load_benchmark_scores
 from utils.get_transform import get_transform
-sys.path.append(op.expanduser('~/david/repos'))
+sys.path.append(op.expanduser('~/data/repos'))
 from texture_vs_shape_bias.code import probabilities_to_decision
 
 np.random.seed(42)

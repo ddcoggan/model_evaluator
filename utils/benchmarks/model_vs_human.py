@@ -4,6 +4,7 @@ This scripts tests models on the model-vs-human package associated with
 Geirhos et al. 2021 https://arxiv.org/pdf/2106.07411
 '''
 
+import sys
 import pandas as pd
 import torch
 import warnings
@@ -11,6 +12,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 from utils import now
 from utils.get_trained_model import get_trained_model
 from utils.load_benchmark_scores import load_benchmark_scores
+sys.path.append("utils/benchmarks/model-vs-human")
 from modelvshuman import Plot, Evaluate
 from modelvshuman.datasets.registry import list_datasets
 from modelvshuman.models.wrappers.pytorch import PytorchModel

@@ -25,40 +25,40 @@ properties = {
 models = {
     'No augmentation': {
         'ResNet101': {
-            'path': 'resnet101/xform-cont-weak-resize',
+            'path': 'resnet101/xform-cont-no-blur-weak-resize',
             'color': 'w', 'edgecolor': 'k',
             'xpos': 0,
         },
     },
-    'Noise': {
-        'Fourier': {
-            'path': 'resnet101/noise-fourier_xform-weak-resize',
-            'color': 'tab:blue',
-            'xpos': 0,
-        },
-        'Gaussian': {
-            'path': 'resnet101/noise-gaussian_xform-weak-resize',
-            'color': 'tab:red',
-            'xpos': 1,
-        },
-        'Fourier and Gaussian': {
-            'path': 'resnet101/noise-fourier-gaussian_xform-weak-resize',
-            'color': 'tab:purple',
-            'xpos': 2,
-        },
-    },
-    'Blur': {
-        'Weak': {
-            'path': 'resnet101/blur-weak_xform-weak-resize',
-            'color': TAB20[5],#'tab:yellow',
-            'xpos': 0,
-        },
-        'Strong': {
-            'path': 'resnet101/blur-strong_xform-weak-resize',
-            'color': TAB20[4],#'tab:green',
-            'xpos': 1,
-        },
-    },
+    #'Noise': {
+    #    'Fourier': {
+    #        'path': 'resnet101/noise-fourier_xform-weak-resize',
+    #        'color': 'tab:blue',
+    #        'xpos': 0,
+    #    },
+    #    'Gaussian': {
+    #        'path': 'resnet101/noise-gaussian_xform-weak-resize',
+    #        'color': 'tab:red',
+    #        'xpos': 1,
+    #    },
+    #    'Fourier and Gaussian': {
+    #        'path': 'resnet101/noise-fourier-gaussian_xform-weak-resize',
+    #        'color': 'tab:purple',
+    #        'xpos': 2,
+    #    },
+    #},
+    #'Blur': {
+    #    'Weak': {
+    #        'path': 'resnet101/blur-weak_xform-weak-resize',
+    #        'color': TAB20[5],#'tab:yellow',
+    #        'xpos': 0,
+    #    },
+    #    'Strong': {
+    #        'path': 'resnet101/blur-strong_xform-weak-resize',
+    #        'color': TAB20[4],#'tab:green',
+    #        'xpos': 1,
+    #    },
+    #},
 }
 
 for level1, level2s in models.items():

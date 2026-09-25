@@ -39,10 +39,10 @@ DATASETS = [i[len(DATASET_BASE) + 1:] for i in sorted(glob.glob(
 
 def make_dataset(overwrite=False, num_procs=1):
 
-    in_dir = '/home/tonglab/Datasets/occluders'
-    imagenet_dir = '/home/tonglab/Datasets/ILSVRC2012/val'
+    in_dir = op.expanduser('~/data/datasets/images/VisualOccludersDataset')
+    imagenet_dir = op.expanduser('~/data/Datasets/ILSVRC2012/val')
     #out_dir = '/home/tonglab/david/datasets/images/ImageNet-Occluded'
-    out_dir = '/home/tonglab/Datasets/ImageNet-Occluded'
+    out_dir = op.expanduser('~/data/Datasets/ImageNet-Occluded')
     os.makedirs(out_dir, exist_ok=True)
     occs = [op.basename(i) for i in glob.glob(f'{in_dir}/*')]
     viss = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -109,6 +109,7 @@ def score_model(model_dir, architecture, batch_size, m=0, total_models=0, num_pr
         vis = float(vis_perc)/100
         dataset = ImageFolder(op.join(DATASET_BASE, subset),
                               transform=transform)
+        assert len(dataset) == 50_000, 'missing images'
         loader = DataLoader(dataset, batch_size=batch_size,
                             shuffle=True, num_workers=num_procs)
 

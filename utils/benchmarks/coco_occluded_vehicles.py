@@ -4,6 +4,7 @@ Kortylewski et al. (2020) https://arxiv.org/pdf/2003.04490
 '''
 
 import glob
+import os.path as op
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -21,7 +22,7 @@ from utils.load_benchmark_scores import load_benchmark_scores
 np.random.seed(42)
 
 BENCHMARK = 'COCO_Occluded_Vehicles'
-BENCHMARK_BASE = f'/home/tonglab/Datasets/{BENCHMARK}'
+BENCHMARK_BASE = op.expanduser(f'~/Datasets/{BENCHMARK}')
 CLASSES = {
     'aeroplane': [404, 895],
     'bicycle': [671, 444],

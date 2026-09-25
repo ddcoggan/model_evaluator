@@ -110,7 +110,7 @@ def score_model(model_dir, architecture, batch_size, m=0, total_models=0,
     results, out_path = load_benchmark_scores(
         model_dir, BENCHMARK, overwrite)
 
-    if results.empty:
+    if results.empty or 'level_2' not in results.columns:
         subsets_to_run = DATASETS
     else:
         subsets_to_run = [i for i in DATASETS if not len(results[

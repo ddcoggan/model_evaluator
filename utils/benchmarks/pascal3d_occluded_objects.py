@@ -4,6 +4,7 @@ Kortylewski et al. (2020) https://arxiv.org/pdf/2003.04490
 '''
 
 import glob
+import os.path as op
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -24,7 +25,7 @@ plt.rcParams.update(custom_defaults)
 np.random.seed(42)
 
 BENCHMARK = 'PASCAL3D+_Occluded_Objects'
-BENCHMARK_BASE = f'/home/tonglab/Datasets/PASCAL3D+_occ'
+BENCHMARK_BASE = op.expanduser(f'~/Datasets/PASCAL3D+_occ')
 CLASSES = {
     'aeroplane': [404, 895],
     'bicycle': [671, 444],

@@ -9,7 +9,7 @@ from .load_params import load_params
 from . import MODEL_BASE
 
 def get_trained_model(model_dir, architecture,
-                      return_states=False, return_blocks=None):
+                      return_states=False, return_blocks=None, weights='final'):
 
     # get kwargs for configurable models
     args_file = glob.glob(f'{model_dir}/*.json')
@@ -54,8 +54,18 @@ def get_trained_model(model_dir, architecture,
 
         # get model and load weights normallu
         model = get_model(architecture, kwargs)
-        params_path = sorted(glob.glob(op.join(
-            MODEL_BASE, model_dir, 'params/???.pt*')))[-1]
+        params_dir = op.join(MODEL_BASE, model_dir, 'params')
+        available_params = glob.glob(f'{params_dir}/*.pt*')
+        if len(available_params) == 1:
+            params_path = available_params[0]
+        elif weights == 'final':
+            params_path = sorted(glob.glob(f'{params_dir}/???.pt*'))[-1]
+        elif weights == 'best':
+            params_path = sorted(glob.glob(op.join(
+                MODEL_BASE, model_dir, 'params/best_???.pt')))[0]
+        else:
+            params_path = op.join(
+                MODEL_BASE, model_dir, f'params/{weights}.pt')
         model = load_params(params_path, model, 'model')
 
     return model

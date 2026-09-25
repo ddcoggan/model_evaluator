@@ -703,7 +703,7 @@ def compare_models(overwrite=False):
                 .groupby(['subject', 'group', 'model'])
                 .apply(lambda d: d[d.cycle == d.cycle.max()])
                 .reset_index(drop=True)
-                .groupby(['subject', 'group'])
+                .groupby(['subject', 'model'])
                 .agg({'value': 'mean'})
                 .reset_index())
             #xlabel_padding = max([len(i.split('\n')) for i in
@@ -711,7 +711,7 @@ def compare_models(overwrite=False):
             #xlabel = 'pooled models' + '\n' * xlabel_padding
             #df_plot['model'] = [xlabel if i != 'humans' else 'humans' for i
             #                 in df_plot.group]
-            df_plot = df_plot.rename(columns={'group': 'model'})
+            #df_plot = df_plot.rename(columns={'group': 'model'})
             df_plot['group'] = 'pooled models'
             df_plot['cycle'] = -1
             df_plot = (df_plot
@@ -836,6 +836,12 @@ def compare_models(overwrite=False):
                     'ylabel': r"Pearson's $\it{r}$",  #r"correlation ($\it{r}$)"
                     'yticks': np.arange(-2, 2, .5),
                     'ylims': (-1, 1),
+                    'chance': 0},
+                'cond_pearson_r_unocc': {
+                    'title': 'accuracy similarity to humans\n(condition-wise)',
+                    'ylabel': r"Pearson's $\it{r}$",  # r"correlation ($\it{r}$)"
+                    'yticks': np.arange(-2, 2, .5),
+                    'ylims': (0, 1),
                     'chance': 0},
                 'curve_pearson_r': {
                     'title': 'curve similarity to humans\n(condition-wise)',
