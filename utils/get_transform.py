@@ -3,7 +3,7 @@ import torchvision
 import torchvision.transforms.v2 as transforms
 from torch import float32
 
-def get_transform(architecture, model_dir):
+def get_transform(architecture, model_dir, model=None):
 
     if hasattr(torchvision.models, architecture) and 'pretrained' in model_dir:
         model_attr = str([i for i in torchvision.models.__dict__ if

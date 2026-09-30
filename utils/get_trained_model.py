@@ -4,12 +4,17 @@ import glob
 import os.path as op
 import json
 import torchvision
+from brainscore_vision import load_model
 from .get_model import get_model
 from .load_params import load_params
 from . import MODEL_BASE
 
 def get_trained_model(model_dir, architecture,
                       return_states=False, return_blocks=None, weights='final'):
+
+    # special handling for brainscore models
+    if architecture == 'brainscore_models':
+        return load_model(op.basename(model_dir)).activations_model._model
 
     # get kwargs for configurable models
     args_file = glob.glob(f'{model_dir}/*.json')

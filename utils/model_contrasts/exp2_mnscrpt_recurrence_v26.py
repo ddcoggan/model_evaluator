@@ -17,7 +17,7 @@ properties = {
 models = {
     'FLaBnet v26': {
         'no occlusion - clear': {
-            'architecture': 'cognet_v25',
+            'architecture': 'cognet_v27',
             'path': 'cognet/v25',
             'xpos': 0,
             'color': 'w',
@@ -28,7 +28,7 @@ models = {
             'linecolor': 'k',
         },
         'no occlusion - clear to blurry': {
-            'architecture': 'cognet_v25',
+            'architecture': 'cognet_v27',
             'path': 'cognet/v26_clear2blurry',
             'xpos': 1,
             'color': 'tab:red',

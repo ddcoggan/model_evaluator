@@ -23,6 +23,7 @@ from .exp2_mnscrpt_recurrence_v27 import models as exp2_mnscrpt_recurrence_v27
 #from utils.model_contrasts.old.exp1_mnscrpt_recurrence_last_cycle import
 # models as FLaBnet
 from .public_models import models as public_models
+from .brainscore_models import models as brainscore_models
 from .pix2pix import models as pix2pix
 from .vit import models as vit
 from .recurrence import models as recurrence
@@ -52,6 +53,7 @@ HUMAN_CONFIG = {'humans': {
 model_contrasts = dict(
 
     #public_models=public_models,
+    brainscore_models=brainscore_models,
     #mnscrpt_final=mnscrpt_final,
     #mnscrpt_final_weak=mnscrpt_final_weak,
     #mnscrpt_final_finetune=mnscrpt_final_finetune,
@@ -69,7 +71,7 @@ model_contrasts = dict(
     #exp1_mnscrpt_occ_task_pooled=exp1_mnscrpt_occ_task_pooled,
     #exp1_mnuscrpt_recurrence_all_cycles=exp1_mnscrpt_recurrence_all_cycles,
     #exp1_mnscrpt_recurrence_last_cycle=exp1_mnscrpt_recurrence_last_cycle,
-    exp1_mnscrpt_noise_blur=exp1_mnscrpt_noise_blur,
+    #exp1_mnscrpt_noise_blur=exp1_mnscrpt_noise_blur,
 
     #exp2_mnscrpt_recurrence_v26=exp2_mnscrpt_recurrence_v26,
     #exp2_mnscrpt_recurrence_v27=exp2_mnscrpt_recurrence_v27,

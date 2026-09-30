@@ -6,8 +6,8 @@ from types import SimpleNamespace
 import torch.nn as nn
 import math
 from pathlib import Path
-sys.path.append(op.expanduser('~/data/master_scripts/DNN'))
-import zoo
+sys.path.append(op.expanduser('~/PycharmProjects'))
+from model_trainer import zoo
 from torchvision import models
 
 def get_model(architecture, kwargs):
