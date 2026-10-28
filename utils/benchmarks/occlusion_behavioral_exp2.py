@@ -24,7 +24,7 @@ from in_vivo.behavioral.exp2.analysis import condwise_robustness_plot
 from torchvision.utils import save_image
 
 from utils import insert_cycle, now, MODEL_BASE
-from utils.model_contrasts import model_contrasts
+from utils.model_specification import model_contrasts
 from utils.get_trained_model import get_trained_model
 from utils.image_processing import tile
 from utils.get_activations import get_activations

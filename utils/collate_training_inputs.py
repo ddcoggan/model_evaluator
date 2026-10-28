@@ -6,7 +6,7 @@ import os.path as op
 import glob
 import sys
 import matplotlib.pyplot as plt
-from .model_contrasts import model_contrasts
+from .model_specification import model_contrasts
 from .behavioral_compare_models_exp1 import get_group_counts
 from . import MODEL_BASE
 

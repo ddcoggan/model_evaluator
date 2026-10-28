@@ -26,7 +26,7 @@ from plot_utils import export_legend, custom_defaults
 plt.rcParams.update(custom_defaults)
 
 from utils import insert_cycle, now
-from utils.model_contrasts import region_to_layer
+from utils.model_specification import region_to_layer
 from utils.get_trained_model import (
     get_trained_model, get_model, load_params)
 from in_vivo.fMRI.utils import CFG as fMRI

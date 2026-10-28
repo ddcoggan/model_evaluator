@@ -31,7 +31,7 @@ from pytorch_grad_cam import (GradCAM, GradCAMPlusPlus, HiResCAM, EigenGradCAM)
 import torchvision.transforms.v2 as transforms
 from torch.utils.data import DataLoader
 
-from .model_contrasts import model_contrasts, region_to_layer, effect_colors
+from .model_specification import model_contrasts, region_to_layer, effect_colors
 from .get_trained_model import get_trained_model, reorg_dict, now
 from utils.benchmarks.occlusion_behavioral_exp1 import load_trials, list_images
 

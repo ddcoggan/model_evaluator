@@ -16,7 +16,7 @@ for model_id in model_ids:
 
     # add model to dict
     model_dir = op.join('brainscore_models', model_id)
-    models[model_id] = {model_id: {'architecture': 'brainscore_models', 'path': model_dir}}
+    models[model_dir] = {'architecture': 'brainscore_models'}
 
     # make model dir
     model_dir_abs = op.join(MODEL_BASE, model_dir)

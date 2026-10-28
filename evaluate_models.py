@@ -10,7 +10,7 @@ import datetime
 from joblib import Parallel, delayed
 
 from utils.benchmarks.occlusion_behavioral_exp1 import analyse_performance
-from utils.model_contrasts import all_models
+from utils.model_specification import all_models
 
 # hardware
 num_procs = 8

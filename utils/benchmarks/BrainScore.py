@@ -18,7 +18,7 @@ sys.path.append(op.expanduser('~/david/master_scripts/misc'))
 from seconds_to_text import seconds_to_text
 from plot_utils import make_legend, custom_defaults
 plt.rcParams.update(custom_defaults)
-from utils.model_contrasts import model_contrasts, region_to_layer
+from utils.model_specification import model_contrasts, region_to_layer
 from in_vivo.fMRI.scripts.utils import line_plot
 
 REGIONS = ['V1', 'V2', 'V4', 'IT']

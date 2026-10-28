@@ -47,7 +47,7 @@ def plot_filters(all_models, overwrite=False):
 if __name__ == "__main__":
 
     import time
-    from .model_contrasts import all_models
+    from .model_specification import all_models
     sys.path.append(op.expanduser('~/david/master_scripts/misc'))
     from seconds_to_text import seconds_to_text
 

@@ -25,7 +25,7 @@ from seconds_to_text import seconds_to_text
 from plot_utils import make_legend, custom_defaults
 plt.rcParams.update(custom_defaults)
 
-from utils.model_contrasts import (
+from utils.model_specification import (
     model_contrasts, region_to_layer, layer_to_region, all_models,
     model_dirs_gen)
 from utils.get_trained_model import (

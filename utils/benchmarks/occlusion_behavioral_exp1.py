@@ -35,7 +35,7 @@ import torchvision.transforms.v2 as transforms
 from torchvision.utils import save_image
 from torch import float32
 from utils import insert_cycle, now, MODEL_BASE
-from utils.model_contrasts import model_contrasts
+from utils.model_specification import model_contrasts
 from utils.get_trained_model import get_trained_model
 from utils.image_processing import tile
 from utils.get_activations import get_activations

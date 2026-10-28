@@ -18,15 +18,15 @@ import pingouin as pg
 from statsmodels.stats.anova import AnovaRM
 from copy import deepcopy
 
-from .model_contrasts import (model_contrasts, HUMAN_COLOR,
-                              HUMAN_MARKER, HUMAN_CONFIG)
+from .model_specification import (model_contrasts, HUMAN_COLOR,
+                                  HUMAN_MARKER, HUMAN_CONFIG)
 from utils.benchmarks.occlusion_behavioral_exp1 import load_trials, reshape_metrics
 from . import now, MODEL_BASE
 from .plot_utils import make_legend, custom_defaults
 plt.rcParams.update(custom_defaults)
 from .math_functions import sigmoid
 from .make_legends import make_legends
-from .model_contrasts import model_properties
+from .model_specification import model_properties
 
 sys.path.append(f'..')
 from p022_occlusion.in_vivo.behavioral.exp1.analysis import CFG as EXP1

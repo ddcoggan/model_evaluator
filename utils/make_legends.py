@@ -6,7 +6,7 @@ import os.path as op
 import os
 from itertools import product as itp
 from itertools import combinations as itc
-from .model_contrasts import model_contrasts, HUMAN_CONFIG
+from .model_specification import model_contrasts, HUMAN_CONFIG
 from .plot_utils import make_legend
 
 def make_legends(overwrite=False):
