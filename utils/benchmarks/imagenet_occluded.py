@@ -82,11 +82,14 @@ def make_dataset(overwrite=False, num_procs=1):
 
 @torch.no_grad()
 def score_model(model_dir, architecture, batch_size, m=0, total_models=0, num_procs=1,
-                overwrite=False):
+                overwrite=False, natural_only=True):
 
     results, out_path = load_benchmark_scores(
         model_dir, BENCHMARK, overwrite)
 
+    if natural_only:
+        DATASETS = [i[len(DATASET_BASE) + 1:] for i in sorted(glob.glob(
+            f'{DATASET_BASE}/natural/*'))]
     if results.empty:
         subsets_to_run = DATASETS
     else:

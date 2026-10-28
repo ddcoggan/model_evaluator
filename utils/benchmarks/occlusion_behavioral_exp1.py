@@ -44,8 +44,6 @@ from utils.plot_utils import custom_defaults
 plt.rcParams.update(custom_defaults)
 sys.path.append(op.expanduser('~/data/projects/p022_occlusion'))
 from in_vivo.behavioral.exp1.analysis import CFG as EXP1
-from in_vivo.behavioral.exp1.analysis import (
-    condwise_robustness_plot_array)
 
 np.random.seed(42)
 
@@ -587,6 +585,78 @@ def fit_visibility_curves(trials):
     return curves
 
 
+
+def condwise_robustness_plot_array(df, metric, outpath, ylabel,
+    df_curves=None, yticks=(0,1), ylims=(0,1),  chance=None, legend_path=None):
+
+    fig, axes = plt.subplots(
+        3, 3, figsize=(3.5, 3.5), sharex=True, sharey=True)
+
+    xvals = EXP1.visibilities
+    perf_unocc = df[df.visibility == 1][metric].mean()
+
+    for o, occluder_class in enumerate(EXP1.occluder_classes):
+        ax = axes.flatten()[o]
+
+        for c, occluder_color in enumerate(EXP1.occluder_colors):
+            face_color = EXP1.plot_colors[o * 2 + c]
+            edge_color = EXP1.plot_colors[o * 2 + c]
+
+            # plot curve function underneath
+            if df_curves is not None:
+                if 'subject' in df_curves.columns:
+                    df_curves = df_curves[df_curves.subject == 'group']
+                popt = (df_curves[
+                    (df_curves.metric == metric) &
+                    (df_curves.occluder_class == occluder_class) &
+                    (df_curves.occluder_color == occluder_color)]
+                    [['L', 'x0', 'k', 'b']]).values[0]
+                if np.isfinite(popt).all():
+                    curve_x = np.linspace(0, 1, 1000)
+                    curve_y = sigmoid(curve_x, *popt)
+                    ax.plot(curve_x, curve_y, color=edge_color, zorder=1)
+
+            # plot accuracies on top
+            perf_occ = df[
+                (df.occluder_class == occluder_class) &
+                (df.occluder_color == occluder_color)]
+            yvals = perf_occ.groupby('visibility')[metric].mean().to_list()
+            ax.scatter(xvals, yvals, facecolor=face_color, clip_on=False,
+                       edgecolor=edge_color, zorder=2)
+
+        # plot unoccluded
+        ax.scatter(1, perf_unocc, color='white',
+                   edgecolor='k', zorder=3, clip_on=False)
+
+        # format plot
+        #ax.set_title(EXP1.occluder_labels[o], size=7)
+        ax.set_xticks((0, 1))
+        ax.set_xlim((0, 1))
+        ax.set_yticks(yticks)
+        ax.set_ylim(ylims)
+        ax.tick_params(axis='both', which='major', labelsize=7)
+        # ax.axhline(y=acc1unalt, color=colors[0], linestyle='dashed')
+        if chance is not None:
+            ax.axhline(y=chance, color='k', linestyle='dotted')
+        if o == 7:
+            ax.set_xlabel('visibility', size=10)
+        if o == 3:
+            ax.set_ylabel(ylabel, size=10)
+
+    plt.tight_layout()
+    plt.savefig(outpath)
+    plt.close()
+
+    if legend_path:
+        make_legend(
+            outpath=legend_path,
+            labels=['unoccluded'] + EXP1.occ_col_labels,
+            markers='o',
+            colors=['w'] + EXP1.plot_colors,
+            markeredgecolors=None,
+            linestyles='None')
+
+
 def measure_human_likeness(trials_model, trials_human):
 
     def _c_obs(trials):
@@ -933,7 +1003,7 @@ def analyse_performance(model_dir, m=0, total_models=0, layers=('output'),
 
     # measure human likeness
     likeness_path = f'{results_dir}/human_likeness.parquet'
-    existing_likeness = existing_results(likeness_path, layers, True)#overwrite)
+    existing_likeness = existing_results(likeness_path, layers, overwrite)
     if existing_likeness is not True:
         print(f'{now()} | Analysing human likeness (exp1) | {mod_str}')
         trials_human = load_trials(drop_human=False)

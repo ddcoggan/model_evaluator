@@ -8,6 +8,8 @@ import glob
 import time
 import datetime
 from joblib import Parallel, delayed
+
+from utils.benchmarks.occlusion_behavioral_exp1 import analyse_performance
 from utils.model_contrasts import all_models
 
 # hardware
@@ -30,6 +32,7 @@ def main():
     #make_legends()
     #plot_filters()
     #collate_training_inputs()
+    jang_noise()
     occlusion_behavioral(['exp1'])
     #occlusion_behavioral_exp2()
     imagenet()
@@ -107,7 +110,7 @@ def occlusion_behavioral(exps):
     if 'exp1' in exps:
         from utils.benchmarks.occlusion_behavioral_exp1 import (
             get_responses, analyse_performance)
-        parallel_analysis = True
+        parallel_analysis = False
         kwargs_list = []  # for parallel analysis
         for m, (model_dir, info) in enumerate(models.items()):
             architecture = info['architecture']
@@ -184,12 +187,12 @@ def occlusion_behavioral(exps):
     compare_models_pixel(overwrite=False)
     """
 
-# Experiment 1 with crop/resizing test images
-def occlusion_behavioral_exp1_resize():
-    from utils.benchmarks.occlusion_behavioral_exp1_resize import (
-        get_responses, analyse_performance)
-
-    parallel_analysis = True
+def jang_noise():
+    print('Jang-Noise benchmark...')
+    from utils.benchmarks.jang_noise import (
+        make_jang_noise_dataset, get_responses, analyse_performance)
+    #make_jang_noise_dataset(overwrite=False, num_procs=num_procs)
+    parallel_analysis = False
     kwargs_list = []  # for parallel analysis
     for m, (model_dir, info) in enumerate(models.items()):
         architecture = info['architecture']
@@ -198,122 +201,24 @@ def occlusion_behavioral_exp1_resize():
             kwargs = dict(
                 model_dir=model_dir,
                 architecture=architecture,
-                batch_size=64,  # info['batch_size'],
+                batch_size=64,#info['batch_size'],
                 m=m,
                 total_models=len(models),
                 layers=[layer],
                 overwrite=False,
-                num_procs=num_procs)
+                num_procs=num_procs,
+            )
             kwargs['overwrite'] = get_responses(**kwargs)
             kwargs_performance = {**kwargs, **dict(remake_plots=False)}
             for k in ['batch_size', 'architecture', 'num_procs']:
                 del kwargs_performance[k]
-            # kwargs_performance['overwrite'] = True  # force analysis
+            kwargs_performance['overwrite'] = False  # force analysis
             if parallel_analysis:
                 kwargs_list.append(kwargs_performance)
             else:
                 kwargs['overwrite'] = analyse_performance(**kwargs_performance)
     if parallel_analysis:
-        overwrite_analyses = Parallel(n_jobs=num_procs)(
-            delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
-
-# Experiment 1 with crop/resizing test images
-def occlusion_behavioral_exp1_resize80():
-    from utils.benchmarks.occlusion_behavioral_exp1_resize80 import (
-        get_responses, analyse_performance)
-
-    parallel_analysis = True
-    kwargs_list = []  # for parallel analysis
-    for m, (model_dir, info) in enumerate(models.items()):
-        architecture = info['architecture']
-        readout_layers = info['readout_layers']
-        for layer in readout_layers:
-            kwargs = dict(
-                model_dir=model_dir,
-                architecture=architecture,
-                batch_size=64,  # info['batch_size'],
-                m=m,
-                total_models=len(models),
-                layers=[layer],
-                overwrite=False,
-                num_procs=num_procs)
-            kwargs['overwrite'] = get_responses(**kwargs)
-            kwargs_performance = {**kwargs, **dict(remake_plots=False)}
-            for k in ['batch_size', 'architecture', 'num_procs']:
-                del kwargs_performance[k]
-            # kwargs_performance['overwrite'] = True  # force analysis
-            if parallel_analysis:
-                kwargs_list.append(kwargs_performance)
-            else:
-                kwargs['overwrite'] = analyse_performance(**kwargs_performance)
-    if parallel_analysis:
-        overwrite_analyses = Parallel(n_jobs=num_procs)(
-            delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
-
-# Experiment 1 with rotating test images
-def occlusion_behavioral_exp1_rotate():
-    from utils.benchmarks.occlusion_behavioral_exp1_rotate import (
-        get_responses, analyse_performance)
-
-    parallel_analysis = True
-    kwargs_list = []  # for parallel analysis
-    for m, (model_dir, info) in enumerate(models.items()):
-        architecture = info['architecture']
-        readout_layers = info['readout_layers']
-        for layer in readout_layers:
-            kwargs = dict(
-                model_dir=model_dir,
-                architecture=architecture,
-                batch_size=64,  # info['batch_size'],
-                m=m,
-                total_models=len(models),
-                layers=[layer],
-                overwrite=False,
-                num_procs=num_procs)
-            kwargs['overwrite'] = get_responses(**kwargs)
-            kwargs_performance = {**kwargs, **dict(remake_plots=False)}
-            for k in ['batch_size', 'architecture', 'num_procs']:
-                del kwargs_performance[k]
-            # kwargs_performance['overwrite'] = True  # force analysis
-            if parallel_analysis:
-                kwargs_list.append(kwargs_performance)
-            else:
-                kwargs['overwrite'] = analyse_performance(**kwargs_performance)
-    if parallel_analysis:
-        overwrite_analyses = Parallel(n_jobs=num_procs)(
-            delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
-
-# Experiment 1 with crop/resizing and rotating test images
-def occlusion_behavioral_exp1_resize_rotate():
-    from utils.benchmarks.occlusion_behavioral_exp1_resize_rotate import (
-        get_responses, analyse_performance)
-
-    parallel_analysis = True
-    kwargs_list = []  # for parallel analysis
-    for m, (model_dir, info) in enumerate(models.items()):
-        architecture = info['architecture']
-        readout_layers = info['readout_layers']
-        for layer in readout_layers:
-            kwargs = dict(
-                model_dir=model_dir,
-                architecture=architecture,
-                batch_size=64,  # info['batch_size'],
-                m=m,
-                total_models=len(models),
-                layers=[layer],
-                overwrite=False,
-                num_procs=num_procs)
-            kwargs['overwrite'] = get_responses(**kwargs)
-            kwargs_performance = {**kwargs, **dict(remake_plots=False)}
-            for k in ['batch_size', 'architecture', 'num_procs']:
-                del kwargs_performance[k]
-            # kwargs_performance['overwrite'] = True  # force analysis
-            if parallel_analysis:
-                kwargs_list.append(kwargs_performance)
-            else:
-                kwargs['overwrite'] = analyse_performance(**kwargs_performance)
-    if parallel_analysis:
-        overwrite_analyses = Parallel(n_jobs=num_procs)(
+        Parallel(n_jobs=num_procs)(
             delayed(analyse_performance)(**kwargs) for kwargs in kwargs_list)
 
 def imagenet():
@@ -338,7 +243,7 @@ def imagenet_occluded():
         score_model(
             model_dir=model_dir,
             architecture=info['architecture'],
-            batch_size=info['batch_size'],
+            batch_size=64, #info['batch_size'],
             m=m,
             total_models=len(supervised_models),
             overwrite=False,
@@ -366,7 +271,7 @@ def coco_instaorder_cls():
         score_model(
             model_dir=model_dir,
             architecture=info['architecture'],
-            batch_size=info['batch_size'],
+            batch_size=64, #info['batch_size'],
             m=m,
             total_models=len(supervised_models),
             overwrite=False,
@@ -450,7 +355,7 @@ def imagenet_C():
         score_model(
             model_dir=model_dir,
             architecture=architecture,
-            batch_size=info['batch_size'],
+            batch_size=64, #info['batch_size'],
             m=m,
             total_models=len(supervised_models),
             overwrite=False,
@@ -463,7 +368,7 @@ def imagenet_cutmix():
         score_model(
             model_dir=model_dir,
             architecture=info['architecture'],
-            batch_size=info['batch_size'],
+            batch_size=64, #info['batch_size'],
             m=m,
             total_models=len(supervised_models),
             overwrite=False,

@@ -31,6 +31,7 @@ from .mnscrpt_final import models as mnscrpt_final
 from .mnscrpt_final_weak import models as mnscrpt_final_weak
 from .mnscrpt_final_finetune import models as mnscrpt_final_finetune
 from .mnscrpt_final_task import models as mnscrpt_final_task
+from .occlusion_rare import models as occlusion_rare
 #from utils.model_contrasts.VSS_2024_abstract import models as
 # VSS_2024_abstract
 #from utils.model_contrasts.CCN_2024_abstract import models as
@@ -53,7 +54,8 @@ HUMAN_CONFIG = {'humans': {
 model_contrasts = dict(
 
     #public_models=public_models,
-    brainscore_models=brainscore_models,
+    #brainscore_models=brainscore_models,
+    occlusion_rare=occlusion_rare,
     #mnscrpt_final=mnscrpt_final,
     #mnscrpt_final_weak=mnscrpt_final_weak,
     #mnscrpt_final_finetune=mnscrpt_final_finetune,
