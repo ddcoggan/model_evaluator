@@ -18,8 +18,10 @@ gpu = 0
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 os.environ['CUDA_VISIBLE_DEVICES'] = f'{gpu}'
 
-# optionally split model list across 2 GPUs
+# optionally split model list across 2 GPUs (run twice in parallel with gpu=0 and gpu=1)
 #models = {k: v for i, (k, v) in enumerate(all_models.items()) if i % 2 == gpu}
+
+# when using all GPUs on same thread
 models = all_models
 
 # some benchmarks require models trained to classify imagenet
@@ -27,16 +29,16 @@ supervised_models = {k: v for k, v in models.items() if 'task-cont' not in k}
 
 def main():
 
-    start = time.time()
+    """ Adjust the selection and order of benchmarks to run here """
 
     #make_legends()
     #plot_filters()
     #collate_training_inputs()
-    jang_noise()
-    occlusion_behavioral(['exp1'])
+    jang_noise(parallel_analysis=False)
+    occlusion_behavioral(['exp1'], parallel_analysis=False)
     #occlusion_behavioral_exp2()
     imagenet()
-    #imagenet_occluded()
+    imagenet_occluded()
     imagenet_noise()
     imagenet_C()
     pascal3d_occluded_objects()
@@ -45,26 +47,10 @@ def main():
     imagenet_cutmix()
     #cocoa_cls()  # change image paths in annotations
     texture_versus_shape_bias()
-
-    # coco_instaorder_cls()
+    #coco_instaorder_cls()
     #occlusion_fmri()
     #brainscore()
 
-    finish = time.time()
-    print(f'Done. Total time: {str(datetime.timedelta(seconds=finish-start))}')
-
-
-# get master scripts
-for script in ['seconds_to_text', 'plot_utils', 'math_functions', 'Occlude',
-               'Noise', 'get_activations', 'accuracy', 'plot_conv_filters',
-               'save_images', 'predict', 'get_transforms', 'CustomDataset',
-               'image_processing', 'get_model', 'load_params',
-               'AverageMeter', 'calculate_batch_size']:
-    if not op.exists(f'utils/{script}.py'):
-        script_orig = glob.glob(op.expanduser(
-            f'~/david/master_scripts/**/{script}.py'), recursive=True)
-        assert len(script_orig) == 1
-        os.system(f'ln -s {script_orig[0]} utils/{script}.py')
 
 def make_legends():
     print('Making model contrast legends...')
@@ -81,7 +67,7 @@ def collate_training_inputs():
     from utils.collate_training_inputs import collate_training_inputs
     collate_training_inputs(overwrite=False)
 
-def occlusion_behavioral(exps):
+def occlusion_behavioral(exps, parallel_analysis=True):
     print('Behavioral benchmarks...')
     from utils.benchmarks.occlusion_behavioral_exp1 import (
         make_pca_dataset, make_svc_dataset, train_svc)
@@ -145,7 +131,6 @@ def occlusion_behavioral(exps):
     if 'exp2' in exps:
         from utils.benchmarks.occlusion_behavioral_exp2 import (
             get_responses, analyse_performance)
-        parallel_analysis = True
         kwargs_list = []  # for parallel analysis
         for m, (model_dir, info) in enumerate(models.items()):
             architecture = info['architecture']
@@ -187,12 +172,11 @@ def occlusion_behavioral(exps):
     compare_models_pixel(overwrite=False)
     """
 
-def jang_noise():
+def jang_noise(parallel_analysis=True):
     print('Jang-Noise benchmark...')
     from utils.benchmarks.jang_noise import (
         make_jang_noise_dataset, get_responses, analyse_performance)
     #make_jang_noise_dataset(overwrite=False, num_procs=num_procs)
-    parallel_analysis = False
     kwargs_list = []  # for parallel analysis
     for m, (model_dir, info) in enumerate(models.items()):
         architecture = info['architecture']
@@ -410,5 +394,8 @@ compare_models_brainscore(overwrite=recompare_models)
 """
 
 if __name__ == '__main__':
+    start = time.time()
     main()
+    finish = time.time()
+    print(f'Done. Total time: {str(datetime.timedelta(seconds=finish-start))}')
 

@@ -1,7 +1,7 @@
-.idea
+.idea*
 .old
 *.pytest_cache
 *__pycache__
 venv
-*.DS_Store
+*.iml
 

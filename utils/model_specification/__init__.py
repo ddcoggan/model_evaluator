@@ -13,10 +13,11 @@ model_sets = [
 
 # create dict with each unique model instance
 all_models = {}
+model_properties = pd.read_csv('utils/model_specification/model_properties_24GB.csv')
 for model_set in model_sets:
 
     # import the list of models for this set
-    models = __import__(f'utils.model_contrasts.{model_set}', fromlist=['models']).models
+    models = __import__(f'utils.model_specification.{model_set}', fromlist=['models']).models
 
     # loop through each model and add to the dict of all models
     for path, info in models.items():
@@ -27,13 +28,13 @@ for model_set in model_sets:
         if 'image_size' not in info:
             info['image_size'] = 224
         if 'architecture' not in info:
-            info['architecture'] = info['path'].split('/')[0]
+            info['architecture'] = path.split('/')[0]
 
         # assert that the model directory exists
         assert op.isdir(f'{MODEL_BASE}/{path}'), f'{path} not found'
 
         # skip models that have not finished optimizing
-        if not op.isfile(f'{MODEL_BASE}/{info["path"]}/done'):
+        if not op.isfile(f'{MODEL_BASE}/{path}/done'):
             print(f'{path} not finished optimizing, skipping evaluation.')
             continue
 
