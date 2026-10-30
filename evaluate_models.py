@@ -175,8 +175,8 @@ def occlusion_behavioral(exps, parallel_analysis=True):
 def jang_noise(parallel_analysis=True):
     print('Jang-Noise benchmark...')
     from utils.benchmarks.jang_noise import (
-        make_jang_noise_dataset, get_responses, analyse_performance)
-    #make_jang_noise_dataset(overwrite=False, num_procs=num_procs)
+        make_dataset, get_responses, analyse_performance)
+    make_dataset(overwrite=False, num_procs=num_procs)
     kwargs_list = []  # for parallel analysis
     for m, (model_dir, info) in enumerate(models.items()):
         architecture = info['architecture']

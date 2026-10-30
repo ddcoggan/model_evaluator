@@ -49,7 +49,7 @@ DATASET_BASE = op.expanduser('~/Datasets/Jang-Noise/behavioral')
 NOISE_TYPES = ['gaussian', 'fourier']
 SSNRS = np.arange(0.05, 1.01, 0.05)
 
-#HUMAN_RSM = np.load(f'{DATASET_BASE}/fmri/human_RSMs.npy')
+
 #ROIS = ['V1', 'V2', 'V3', 'V4', 'LOC', 'FFA', 'PPA', 'EVC', 'HVC']
 RES_DIR = 'benchmarking/noise_behavioral'
 RAW_TRIALS = pd.read_parquet(f'{DATASET_BASE}/human/trials_fig2.parquet')
@@ -64,7 +64,7 @@ METRICS = ['accuracy', 'true_class_prob']  # always available
 METRICS_ALL = METRICS
 
 
-def make_jang_noise_dataset(overwrite=False, num_procs=1):
+def make_dataset(overwrite=False, num_procs=1):
 
     """ This dataset contains several benchmarks across behavioral and neural domains from the Jang and Tong 2021 PLOS
     Comp. Bio. paper. It is different to the ImageNet-Noise dataset in several ways, such as using a 16-AFC task and
@@ -87,6 +87,39 @@ def make_jang_noise_dataset(overwrite=False, num_procs=1):
     difficult to recognize.
 
     """
+
+    """ noise ceiling for fMRI responses """
+    rsms = np.load(f'{op.dirname(DATASET_BASE)}/fmri/human_RSMs.npy')
+
+    # remove diagonal for last two dimensions
+    off_diag_mask_flat = np.array(1 - np.eye(48).flatten(), dtype=bool)
+    ROIS = ['V1', 'V2', 'V3', 'V4', 'LOC', 'FFA', 'PPA', 'EVC', 'HVC']
+    nc = pd.DataFrame()
+    for r, roi in enumerate(ROIS):
+        uppers, lowers = [], []
+        for s in range(rsms.shape[0]):
+            ind_rsm = rsms[s, r].flatten()[off_diag_mask_flat]
+
+            # lower bound: individual vs remaining group
+            rem_grp_rsm = np.delete(rsms[:, r], s, 0).mean(0).flatten()[off_diag_mask_flat]
+            lowers.append(np.corrcoef(ind_rsm, rem_grp_rsm)[0, 1])
+
+            # upper bound: individual vs entire group
+            grp_rsm = rsms[:, r].mean(0).flatten()[off_diag_mask_flat]
+            uppers.append(np.corrcoef(ind_rsm, grp_rsm)[0, 1])
+
+        nc = pd.concat([nc, pd.DataFrame({
+            'ROI': [roi],
+            'lower': [np.mean(lowers)],
+            'upper': [np.mean(uppers)]
+        })])
+    nc.to_csv(f'{op.dirname(DATASET_BASE)}/fmri/noise_ceiling.csv', index=False)
+
+
+
+
+
+
     """ noise_ceiling for fig 5 """
     if not op.isfile(f'{DATASET_BASE}/human/noise_ceiling_fig5.csv') or overwrite:
         trials = pd.read_parquet(f'{DATASET_BASE}/human/trials_fig5.parquet')
